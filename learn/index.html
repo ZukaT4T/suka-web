@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>ห้องเรียนสุขาสอนเทรด</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600;700&family=Sarabun:wght@400;500;600&display=swap">
+<style>
+/* ---- Layout: แอปสองคอลัมน์ ซ้ายรายการบท ขวาเครื่องเล่น มือถือเรียงเป็นคอลัมน์เดียว ---- */
+:root{
+  --paper:#f7f1e6; --paper-2:#ffffff; --ink:#0d1b3e; --ink-2:#3d4762; --line:#e6dcc6;
+  --gold:#d4a537; --gold-soft:#f7e3a8; --green:#2e8b57; --red:#c0392b; --navy:#13306f; --blue:#2353c4; --blue-light:#dde6fb; --navy-grad:linear-gradient(160deg,#2353c4 0%,#13306f 55%,#0b1d4a 100%);
+  --display:"Mitr","Sarabun",system-ui,sans-serif; --body:"Sarabun","Mitr",system-ui,sans-serif;
+  --gold-grad:linear-gradient(135deg,#fbe7a6 0%,#e9c35a 35%,#d4a537 55%,#b1841f 100%);
+  --shadow-1:0 1px 2px rgba(14,14,16,.06),0 4px 10px rgba(14,14,16,.06);
+  --shadow-2:0 2px 4px rgba(14,14,16,.06),0 12px 28px rgba(14,14,16,.10),0 30px 60px -20px rgba(201,162,74,.25);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;font-weight:500;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);line-height:1.2;margin:0;text-wrap:balance}
+p{margin:0}
+.wrap{max-width:1180px;margin:0 auto}
+.eyebrow{font-family:var(--display);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#9c7418;font-weight:500}
+.muted{color:var(--ink-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-weight:600;font-size:15px;
+  padding:10px 16px;border-radius:6px;text-decoration:none;border:1px solid var(--line);cursor:pointer;background:var(--paper-2);color:var(--ink)}
+.btn-gold{background:var(--gold-grad);color:#2b1f06;border-color:transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -2px 0 rgba(0,0,0,.18),0 6px 14px rgba(201,162,74,.35)}
+.btn-line{background:var(--gold-grad);color:#2b1f06;border-color:transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -2px 0 rgba(0,0,0,.18),0 6px 14px rgba(201,162,74,.35)}
+.btn:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.logo{font-family:var(--display);font-weight:700;font-size:18px;text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px}
+.logo i{display:inline-block;width:28px;height:28px;border-radius:50%;background:var(--gold-grad);box-shadow:inset 0 2px 3px rgba(255,255,255,.7),inset 0 -3px 4px rgba(0,0,0,.25)}
+.who{display:flex;align-items:center;gap:10px;font-size:14px}
+.who .av{width:30px;height:30px;border-radius:50%;background:var(--gold-soft);color:var(--gold);display:grid;place-items:center;font-family:var(--display);font-weight:700}
+
+/* gate */
+.gate{max-width:440px;margin:60px auto;background:var(--paper-2);border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:var(--shadow-2)}
+.gate h1{font-size:26px;color:var(--navy)}
+.field{display:grid;gap:6px;margin-top:16px;font-size:14px}
+.field input{font:inherit;font-size:16px;padding:12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
+.err{color:var(--red);font-size:14px;margin-top:10px;min-height:1.4em}
+.linebtn{width:100%;margin-top:18px;font-size:16px;padding:14px}
+.gate .small{font-size:13px;margin-top:14px}
+
+/* app */
+.app{display:grid;grid-template-columns:340px 1fr;gap:24px;padding-block:20px 60px}
+.side{background:var(--paper-2);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-1);overflow:hidden;align-self:start;position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column}
+.prog{padding:14px 16px;border-bottom:1px solid var(--line)}
+.bar{height:8px;background:var(--paper);border-radius:4px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--gold-grad);width:0;transition:width .3s}
+.prog .n{font-family:var(--display);font-weight:600;font-variant-numeric:tabular-nums}
+.list{overflow:auto;min-width:0}
+details.mod{border-bottom:1px solid var(--line)}
+details.mod summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;padding:12px 16px;font-size:14px}
+details.mod summary::-webkit-details-marker{display:none}
+.mod .num{font-family:var(--display);font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.mod .mt{font-family:var(--display);font-weight:600}
+.mod .done{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.ep{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:10px 16px 10px 20px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer}
+.ep:hover{background:var(--paper)}
+.ep.active{background:var(--blue-light)}
+.ep .chk{width:18px;height:18px;border:2px solid var(--line);border-radius:50%;display:grid;place-items:center;font-size:11px}
+.ep.is-done .chk{background:var(--green);border-color:var(--green);color:#fff}
+.ep .t{min-width:0}
+.ep .t small{display:block;color:var(--ink-2);font-size:12px}
+.ep .dur{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.ep.locked{opacity:.55}
+
+.main{min-width:0}
+.player{aspect-ratio:16/9;max-width:100%;background:var(--navy-grad);border-radius:18px;box-shadow:var(--shadow-2);overflow:hidden;position:relative;display:grid;place-items:center;color:#c9cfd8}
+.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.player .ph{text-align:center;padding:24px}
+.player .ph b{font-family:var(--display);display:block;font-size:18px;color:#fff}
+.lesson{margin-top:18px}
+.lesson h2{font-size:24px;margin-top:4px}
+.lesson .desc{margin-top:10px;max-width:60ch}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.mark{display:flex;align-items:center;gap:10px}
+.demo{margin-top:24px;padding:12px 14px;border:1px dashed var(--line);border-radius:8px;font-size:13px;color:var(--ink-2)}
+
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .side{position:static;max-height:none}
+  .list{max-height:50vh}
+}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <a class="logo" href="../"><i></i>ห้องเรียนสุขาสอนเทรด</a>
+  <div class="who" id="who" hidden><span class="av" id="av">ส</span><span id="whoName"></span><button class="btn" id="logout" style="padding:6px 10px;font-size:13px">ออกจากระบบ</button></div>
+</nav>
+
+<!-- ประตูเข้าห้องเรียน -->
+<div class="gate" id="gate">
+  <div class="eyebrow">นักเรียนคอร์ส</div>
+  <h1 style="margin-top:6px">เข้าห้องเรียน</h1>
+  <p class="muted" style="margin-top:8px;font-size:15px">กรอกชื่อและรหัส VIP ที่ได้รับหลังชำระเงิน กรอกครั้งเดียว ครั้งต่อไปเข้าได้เลย</p>
+  <form id="gateForm" autocomplete="off">
+    <label class="field">ชื่อที่ใช้ในห้องเรียน<input id="name" required placeholder="เช่น สุขา"></label>
+    <label class="field">รหัส VIP<input id="code" required placeholder="SUKA-XXXX" style="text-transform:uppercase;letter-spacing:.06em"></label>
+    <div class="err" id="err" aria-live="polite"></div>
+    <button class="btn btn-line linebtn" type="submit">เข้าห้องเรียน</button>
+  </form>
+  <p class="small muted">ยังไม่มีรหัส? <a href="https://lin.ee/qyLgapx" target="_blank" rel="noopener">สมัครเรียนทาง LINE @zuka</a> · รหัสเข้าไม่ได้ ทักแชตเดิมได้เลย</p>
+</div>
+
+<!-- ห้องเรียน -->
+<div class="app" id="app" hidden>
+  <aside class="side">
+    <div class="prog"><div class="eyebrow">ความคืบหน้า</div><div class="n"><span id="doneN">0</span> / <span id="totalN">48</span> บท</div><div class="bar"><i id="barFill"></i></div></div>
+    <div class="list" id="list"></div>
+  </aside>
+  <main class="main">
+    <div class="player" id="player"></div>
+    <div class="lesson">
+      <div class="eyebrow" id="epMod"></div>
+      <h2 id="epTitle"></h2>
+      <p class="desc muted" id="epDesc"></p>
+      <div class="actions">
+        <label class="mark btn"><input type="checkbox" id="doneChk"> เรียนบทนี้แล้ว</label>
+        <button class="btn btn-gold" id="nextBtn">บทถัดไป →</button>
+        <a class="btn" id="askBtn" target="_blank" rel="noopener">ถามในกลุ่ม LINE</a>
+      </div>
+    </div>
+    <div class="demo" id="demoNote" hidden>โหมดทดสอบ: รหัส VIP ยังตรวจจากไฟล์ lessons.js บนเครื่อง เมื่อเชื่อม LINE Login และฐานข้อมูลแล้ว ข้อความนี้จะหายไป</div>
+  </main>
+</div>
+</div>
+
+<script src="../lessons.js"></script>
+<script>
+(function(){
+  var D = window.SUKA; if(!D) return;
+  var KEY_SESSION='suka.session', KEY_PROG='suka.progress';
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
+  function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+
+  var eps=[]; D.modules.forEach(function(m){ m.eps.forEach(function(e){ e.mod=m; eps.push(e); }); });
+  var prog = load(KEY_PROG)||{}; var cur=0;
+
+  // ---------- ประตู ----------
+  var gate=document.getElementById('gate'), app=document.getElementById('app');
+  var session = load(KEY_SESSION);
+  if(session && session.name){ enter(session); }
+
+  document.getElementById('gateForm').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var name=document.getElementById('name').value.trim();
+    var code=document.getElementById('code').value.trim().toUpperCase();
+    var err=document.getElementById('err'); err.textContent='';
+    // >>> จุดที่จะเปลี่ยนเป็นของจริง: เรียก LINE Login แล้วส่ง code ไปตรวจที่ Supabase/Worker
+    //     ถ้ารหัสถูกและยังไม่ถูกใช้ -> ผูก LINE userId กับคอร์ส แล้วคืน session
+    verifyCode(code).then(function(ok){
+      if(!ok){ err.textContent='รหัสไม่ถูกต้อง หรือถูกใช้ไปแล้ว ตรวจตัวสะกดอีกครั้ง หรือทักแชต LINE @zuka'; return; }
+      var s={name:name, code:code, at:Date.now()}; save(KEY_SESSION,s); enter(s);
+    });
+  });
+  function verifyCode(code){ return Promise.resolve((D.demoCodes||[]).indexOf(code)>=0); }
+
+  document.getElementById('logout').addEventListener('click', function(){ try{localStorage.removeItem(KEY_SESSION);}catch(e){} location.reload(); });
+
+  function enter(s){
+    gate.hidden=true; app.hidden=false;
+    var who=document.getElementById('who'); who.hidden=false;
+    document.getElementById('whoName').textContent=s.name; document.getElementById('av').textContent=s.name.slice(0,1);
+    document.getElementById('demoNote').hidden = !((D.demoCodes||[]).indexOf(s.code)>=0);
+    var ask=document.getElementById('askBtn'); ask.href = D.openchat || D.lineOA;
+    buildList();
+    var first = eps.findIndex(function(e){ return !prog[e.ep]; }); show(first<0?0:first);
+  }
+
+  // ---------- รายการบท ----------
+  function buildList(){
+    var list=document.getElementById('list'); list.innerHTML='';
+    D.modules.forEach(function(m){
+      var det=document.createElement('details'); det.className='mod';
+      det.innerHTML='<summary><span class="num">'+String(m.id).padStart(2,'0')+'</span><span class="mt">'+m.title+'</span><span class="done" data-mod="'+m.id+'"></span></summary>';
+      m.eps.forEach(function(e){
+        var b=document.createElement('button'); b.type='button'; b.className='ep'; b.dataset.ep=e.ep;
+        b.innerHTML='<span class="chk">✓</span><span class="t">'+e.ep+' · '+e.title+(e.video?'':'<small>คลิปกำลังผลิต</small>')+'</span><span class="dur">'+(e.duration||'')+' น.</span>';
+        b.addEventListener('click', function(){ show(eps.indexOf(e)); });
+        det.appendChild(b);
+      });
+      list.appendChild(det);
+    });
+    refresh();
+  }
+
+  function refresh(){
+    var n=0; eps.forEach(function(e){ if(prog[e.ep]) n++; });
+    document.getElementById('doneN').textContent=n; document.getElementById('totalN').textContent=eps.length;
+    document.getElementById('barFill').style.width=(n/eps.length*100)+'%';
+    document.querySelectorAll('.ep').forEach(function(b){ b.classList.toggle('is-done', !!prog[b.dataset.ep]); b.classList.toggle('active', eps[cur] && b.dataset.ep===eps[cur].ep); });
+    D.modules.forEach(function(m){ var d=m.eps.filter(function(e){return prog[e.ep]}).length; var el=document.querySelector('.done[data-mod="'+m.id+'"]'); if(el) el.textContent=d+'/'+m.eps.length; });
+  }
+
+  // ---------- เครื่องเล่น ----------
+  function show(i){
+    cur=i; var e=eps[i];
+    document.getElementById('epMod').textContent='ภาค '+e.mod.id+' · '+e.mod.title;
+    document.getElementById('epTitle').textContent=e.ep+' '+e.title;
+    document.getElementById('epDesc').textContent=e.desc;
+    var p=document.getElementById('player');
+    if(e.video){ p.innerHTML='<iframe src="'+e.video+'" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen loading="lazy" title="'+e.ep+'"></iframe>'; }
+    else { p.innerHTML='<div class="ph"><b>'+e.ep+' กำลังผลิต</b>คลิปบทนี้จะขึ้นที่นี่เมื่อตัดต่อเสร็จ ติดตามประกาศในกลุ่ม LINE</div>'; }
+    document.getElementById('doneChk').checked=!!prog[e.ep];
+    document.getElementById('nextBtn').disabled = (i>=eps.length-1);
+    var det=document.querySelector('.ep[data-ep="'+e.ep+'"]'); if(det){ det.closest('details').open=true; }
+    refresh(); window.scrollTo({top:0, behavior:'smooth'});
+  }
+  document.getElementById('doneChk').addEventListener('change', function(ev){ var e=eps[cur]; if(ev.target.checked) prog[e.ep]=Date.now(); else delete prog[e.ep]; save(KEY_PROG,prog); refresh(); });
+  document.getElementById('nextBtn').addEventListener('click', function(){ var e=eps[cur]; if(!prog[e.ep]){ prog[e.ep]=Date.now(); save(KEY_PROG,prog); } if(cur<eps.length-1) show(cur+1); });
+})();
+</script>
+</body>
+</html>
