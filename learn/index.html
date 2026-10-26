@@ -131,7 +131,6 @@ details.mod summary::-webkit-details-marker{display:none}
         <a class="btn" id="askBtn" target="_blank" rel="noopener">ถามในกลุ่ม LINE</a>
       </div>
     </div>
-    <div class="demo" id="demoNote" hidden>โหมดทดสอบ: รหัส VIP ยังตรวจจากไฟล์ lessons.js บนเครื่อง เมื่อเชื่อม LINE Login และฐานข้อมูลแล้ว ข้อความนี้จะหายไป</div>
   </main>
 </div>
 </div>
@@ -140,45 +139,56 @@ details.mod summary::-webkit-details-marker{display:none}
 <script>
 (function(){
   var D = window.SUKA; if(!D) return;
-  var KEY_SESSION='suka.session', KEY_PROG='suka.progress';
-  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
-  function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  var KEY_TOKEN='suka.token', KEY_PROG='suka.progress';
+  function load(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function save(k,v){ try{ localStorage.setItem(k, v); }catch(e){} }
+  function api(path, opt){ opt=opt||{}; opt.headers=Object.assign({'content-type':'application/json'}, token?{'authorization':'Bearer '+token}:{}, opt.headers||{}); return fetch(path,opt).then(function(r){return r.json()}); }
 
   var eps=[]; D.modules.forEach(function(m){ m.eps.forEach(function(e){ e.mod=m; eps.push(e); }); });
-  var prog = load(KEY_PROG)||{}; var cur=0;
+  var prog={}; try{ prog=JSON.parse(load(KEY_PROG)||'{}'); }catch(e){}
+  var videos={}; var cur=0; var token=load(KEY_TOKEN)||''; var me=null;
 
-  // ---------- ประตู ----------
-  var gate=document.getElementById('gate'), app=document.getElementById('app');
-  var session = load(KEY_SESSION);
-  if(session && session.name){ enter(session); }
+  var gate=document.getElementById('gate'), app=document.getElementById('app'), err=document.getElementById('err');
+  var submitBtn=document.querySelector('#gateForm button[type=submit]');
+
+  // มี token อยู่แล้ว -> ตรวจกับเซิร์ฟเวอร์
+  if(token){ submitBtn.disabled=true; err.textContent='กำลังเข้าห้องเรียน…'; err.style.color='var(--ink-2)';
+    api('/api/me').then(function(r){ submitBtn.disabled=false; err.textContent='';
+      if(r.ok){ enter(r); } else { token=''; try{localStorage.removeItem(KEY_TOKEN)}catch(e){} }
+    }).catch(function(){ submitBtn.disabled=false; err.textContent='ติดต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง'; err.style.color=''; });
+  }
 
   document.getElementById('gateForm').addEventListener('submit', function(ev){
     ev.preventDefault();
     var name=document.getElementById('name').value.trim();
     var code=document.getElementById('code').value.trim().toUpperCase();
-    var err=document.getElementById('err'); err.textContent='';
-    // >>> จุดที่จะเปลี่ยนเป็นของจริง: เรียก LINE Login แล้วส่ง code ไปตรวจที่ Supabase/Worker
-    //     ถ้ารหัสถูกและยังไม่ถูกใช้ -> ผูก LINE userId กับคอร์ส แล้วคืน session
-    verifyCode(code).then(function(ok){
-      if(!ok){ err.textContent='รหัสไม่ถูกต้อง หรือถูกใช้ไปแล้ว ตรวจตัวสะกดอีกครั้ง หรือทักแชต LINE @zuka'; return; }
-      var s={name:name, code:code, at:Date.now()}; save(KEY_SESSION,s); enter(s);
-    });
+    err.textContent=''; err.style.color=''; submitBtn.disabled=true;
+    fetch('/api/activate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:name,code:code})}).then(function(r){return r.json()}).then(function(r){
+      submitBtn.disabled=false;
+      if(!r.ok){ err.textContent=r.error||'เข้าไม่ได้ ลองใหม่'; return; }
+      token=r.token; save(KEY_TOKEN, token);
+      return api('/api/me').then(function(m){ if(m.ok) enter(m); else err.textContent=m.error||'เข้าไม่ได้'; });
+    }).catch(function(){ submitBtn.disabled=false; err.textContent='ติดต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง'; });
   });
-  function verifyCode(code){ return Promise.resolve((D.demoCodes||[]).indexOf(code)>=0); }
 
-  document.getElementById('logout').addEventListener('click', function(){ try{localStorage.removeItem(KEY_SESSION);}catch(e){} location.reload(); });
+  document.getElementById('logout').addEventListener('click', function(){ api('/api/me',{method:'DELETE'}).catch(function(){}).then(function(){ try{localStorage.removeItem(KEY_TOKEN);}catch(e){} location.reload(); }); });
 
-  function enter(s){
+  function enter(m){
+    me=m; videos=m.videos||{};
+    // รวมความคืบหน้า: เซิร์ฟเวอร์ + เครื่องนี้
+    var sp=m.progress||{}; Object.keys(sp).forEach(function(k){ if(!prog[k]) prog[k]=sp[k]; }); save(KEY_PROG, JSON.stringify(prog)); syncProgress();
     gate.hidden=true; app.hidden=false;
     var who=document.getElementById('who'); who.hidden=false;
-    document.getElementById('whoName').textContent=s.name; document.getElementById('av').textContent=s.name.slice(0,1);
-    document.getElementById('demoNote').hidden = !((D.demoCodes||[]).indexOf(s.code)>=0);
+    document.getElementById('whoName').textContent=m.name; document.getElementById('av').textContent=m.name.slice(0,1);
     var ask=document.getElementById('askBtn'); ask.href = D.openchat || D.lineOA;
     buildList();
     var first = eps.findIndex(function(e){ return !prog[e.ep]; }); show(first<0?0:first);
   }
+  function vid(e){ return videos[e.ep] || e.video || ''; }
 
-  // ---------- รายการบท ----------
+  var syncT=null;
+  function syncProgress(){ clearTimeout(syncT); syncT=setTimeout(function(){ api('/api/progress',{method:'PUT',body:JSON.stringify({progress:prog})}).catch(function(){}); }, 800); }
+
   function buildList(){
     var list=document.getElementById('list'); list.innerHTML='';
     D.modules.forEach(function(m){
@@ -186,7 +196,7 @@ details.mod summary::-webkit-details-marker{display:none}
       det.innerHTML='<summary><span class="num">'+String(m.id).padStart(2,'0')+'</span><span class="mt">'+m.title+'</span><span class="done" data-mod="'+m.id+'"></span></summary>';
       m.eps.forEach(function(e){
         var b=document.createElement('button'); b.type='button'; b.className='ep'; b.dataset.ep=e.ep;
-        b.innerHTML='<span class="chk">✓</span><span class="t">'+e.ep+' · '+e.title+(e.video?'':'<small>คลิปกำลังผลิต</small>')+'</span><span class="dur">'+(e.duration||'')+' น.</span>';
+        b.innerHTML='<span class="chk">✓</span><span class="t">'+e.ep+' · '+e.title+(vid(e)?'':'<small>คลิปกำลังผลิต</small>')+'</span><span class="dur">'+(e.duration||'')+' น.</span>';
         b.addEventListener('click', function(){ show(eps.indexOf(e)); });
         det.appendChild(b);
       });
@@ -203,22 +213,22 @@ details.mod summary::-webkit-details-marker{display:none}
     D.modules.forEach(function(m){ var d=m.eps.filter(function(e){return prog[e.ep]}).length; var el=document.querySelector('.done[data-mod="'+m.id+'"]'); if(el) el.textContent=d+'/'+m.eps.length; });
   }
 
-  // ---------- เครื่องเล่น ----------
   function show(i){
-    cur=i; var e=eps[i];
+    cur=i; var e=eps[i]; var v=vid(e);
     document.getElementById('epMod').textContent='ภาค '+e.mod.id+' · '+e.mod.title;
     document.getElementById('epTitle').textContent=e.ep+' '+e.title;
     document.getElementById('epDesc').textContent=e.desc;
     var p=document.getElementById('player');
-    if(e.video){ p.innerHTML='<iframe src="'+e.video+'" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen loading="lazy" title="'+e.ep+'"></iframe>'; }
+    if(v){ p.innerHTML=''; var f=document.createElement('iframe'); f.src=v; f.allow='autoplay; fullscreen; picture-in-picture; encrypted-media'; f.allowFullscreen=true; f.loading='lazy'; f.title=e.ep; p.appendChild(f); }
     else { p.innerHTML='<div class="ph"><b>'+e.ep+' กำลังผลิต</b>คลิปบทนี้จะขึ้นที่นี่เมื่อตัดต่อเสร็จ ติดตามประกาศในกลุ่ม LINE</div>'; }
     document.getElementById('doneChk').checked=!!prog[e.ep];
     document.getElementById('nextBtn').disabled = (i>=eps.length-1);
     var det=document.querySelector('.ep[data-ep="'+e.ep+'"]'); if(det){ det.closest('details').open=true; }
     refresh(); window.scrollTo({top:0, behavior:'smooth'});
   }
-  document.getElementById('doneChk').addEventListener('change', function(ev){ var e=eps[cur]; if(ev.target.checked) prog[e.ep]=Date.now(); else delete prog[e.ep]; save(KEY_PROG,prog); refresh(); });
-  document.getElementById('nextBtn').addEventListener('click', function(){ var e=eps[cur]; if(!prog[e.ep]){ prog[e.ep]=Date.now(); save(KEY_PROG,prog); } if(cur<eps.length-1) show(cur+1); });
+  function mark(e,on){ if(on) prog[e.ep]=Date.now(); else delete prog[e.ep]; save(KEY_PROG, JSON.stringify(prog)); syncProgress(); refresh(); }
+  document.getElementById('doneChk').addEventListener('change', function(ev){ mark(eps[cur], ev.target.checked); });
+  document.getElementById('nextBtn').addEventListener('click', function(){ var e=eps[cur]; if(!prog[e.ep]) mark(e,true); if(cur<eps.length-1) show(cur+1); });
 })();
 </script>
 </body>

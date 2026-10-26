@@ -1,6 +1,6 @@
 // =====================================================
 //  lessons.js — ข้อมูลคอร์ส "สุขาสอนเทรด" (แก้ไฟล์นี้ไฟล์เดียว)
-//  - ใส่ลิงก์วิดีโอในช่อง video ของแต่ละ EP เมื่อคลิปเสร็จ
+//  - ลิงก์วิดีโอใส่ที่หน้าแอดมิน /admin/ (ไม่ต้องใส่ในไฟล์นี้ เพื่อไม่ให้คนนอกเห็นลิงก์)
 //    รองรับลิงก์ embed ของ Bunny Stream / Vimeo / YouTube (unlisted)
 //    ตัวอย่าง Bunny: "https://iframe.mediadelivery.net/embed/XXXXX/yyyyyyyy"
 //  - ปล่อยว่าง "" = หน้าเรียนจะขึ้นว่า "คลิปกำลังผลิต"
@@ -15,8 +15,6 @@ window.SUKA = {
   lineOAHandle: "@zuka",
   facebook: "https://www.facebook.com/zukatrader/",
   openchat: "https://line.me/ti/g2/thhJkmSQitUosAotVZhCeL2UwBkaMpftkAN8Ww", // กลุ่ม LINE ถาม-ตอบของคอร์ส
-  // ---- รหัส VIP สำหรับทดสอบเท่านั้น (ของจริงจะตรวจกับฐานข้อมูล) ----
-  demoCodes: ["SUKA-DEMO"],
 
   modules: [
     { id: 0, title: "เริ่มนับหนึ่ง", sub: "สำหรับคนไม่เคยเทรด", eps: [

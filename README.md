@@ -6,13 +6,15 @@
 suka-web/
 ├─ index.html        หน้าขายคอร์ส (ราคา 1,490 ตลอดชีพ ปุ่มสมัครไป LINE @zuka)
 ├─ learn/index.html  ห้องเรียน (กรอกรหัส VIP → รายการ 48 บท → เครื่องเล่น → ติ๊กเรียนแล้ว)
-├─ lessons.js        ข้อมูลคอร์สทั้งหมด แก้ไฟล์นี้ไฟล์เดียว
+├─ lessons.js        ชื่อบท/คำอธิบาย 48 EP
+├─ admin/index.html  หน้าแอดมิน (สร้างรหัส VIP, ใส่ลิงก์คลิป)
+├─ functions/        API บน Cloudflare (รหัส VIP, ความคืบหน้า)
 └─ README.md         ไฟล์นี้
 ```
 
 ## ทดลองดูตอนนี้
 - หน้าขาย: เปิด `index.html`
-- ห้องเรียน: เปิด `learn/index.html` ใส่ชื่ออะไรก็ได้ รหัส `SUKA-DEMO`
+- ห้องเรียน: ต้องเปิดจากเว็บจริง (API อยู่บน Cloudflare) ใช้รหัสจากหน้าแอดมิน
 
 ## ขั้น 1 · เอาขึ้นอินเทอร์เน็ตฟรี (Cloudflare Pages) ~15 นาที
 1. สมัคร https://github.com (ฟรี) → New repository ชื่อ `suka-web` → Upload files → ลากทั้งโฟลเดอร์นี้ลงไป → Commit
@@ -31,16 +33,15 @@ suka-web/
    - Security → Allowed referrers: ใส่โดเมนของเรา (คลิปจะเล่นได้เฉพาะบนเว็บเรา)
    - เปิด Token authentication เมื่อต่อ login ของจริง (ลิงก์หมดอายุเอง)
 2. อัปโหลดคลิปทีละ EP → กด Embed → คัดลอกลิงก์ใน `src="..."`
-3. เปิด `lessons.js` วางลิงก์ในช่อง `video: ""` ของ EP นั้น → อัปโหลดไฟล์ขึ้น GitHub
+3. เปิดหน้าแอดมิน /admin/ วางลิงก์ในช่องของ EP นั้น → บันทึก (ไม่ต้องแก้ไฟล์)
    (ใช้ YouTube unlisted หรือ Vimeo ได้เหมือนกัน วางลิงก์ embed ลงช่องเดียวกัน)
 
-## ขั้น 4 · LINE Login + รหัส VIP ของจริง
-ตอนนี้ห้องเรียนตรวจรหัสจากรายการ `demoCodes` ใน `lessons.js` (ใช้ทดสอบเท่านั้น ห้ามใส่รหัสจริงที่นี่ เพราะใครก็เปิดอ่านได้)
-ของจริงทำแบบนี้ ผมทำให้ได้ทั้งหมดเมื่อสุขาเปิดบัญชีให้:
-1. LINE Developers → สร้าง Provider → Channel แบบ "LINE Login" → ได้ Channel ID / Secret
-2. Supabase (ฟรี) → ตาราง `students` (line_user_id, name, course, vip_code, activated_at) และ `vip_codes` (code, used)
-3. Cloudflare Pages Functions (ไฟล์ `functions/api/auth.js`) รับ callback จาก LINE → ตรวจ code → ออก session
-4. Google Sheet "ออเดอร์และตรวจสลิป โค้ชสุขา" ใส่สูตรสร้างรหัส VIP และ Apps Script ส่งรหัสเข้า Supabase อัตโนมัติ
+## ขั้น 4 · ระบบรหัส VIP (ทำแล้ว ใช้ Cloudflare KV + Pages Functions ในโฟลเดอร์ functions/)
+- หน้าแอดมิน: https://zuka-t4tacademy.com/admin/  ใส่กุญแจ ADMIN_KEY → สร้างรหัส VIP, ยกเลิกรหัส, ใส่ลิงก์คลิปแต่ละ EP
+- นักเรียน: https://zuka-t4tacademy.com/learn/  กรอกชื่อ + รหัส → เข้าได้ทุกเครื่อง (ชื่อต้องตรงกับครั้งแรก สูงสุด 5 เครื่อง) ความคืบหน้าซิงก์ตามรหัส
+- ลิงก์คลิปเก็บใน KV เห็นเฉพาะคน login (ไม่อยู่ใน lessons.js)
+- ตั้งค่าใน Cloudflare Pages → suka-web → Settings: KV binding ชื่อ SUKA_KV และ Environment variable (secret) ADMIN_KEY
+- เปลี่ยนกุญแจแอดมิน: แก้ ADMIN_KEY ใน Settings แล้ว Retry deployment
 
 ## ขั้น 5 · กลุ่มถาม-ตอบ
 - สร้าง LINE OpenChat → ตั้ง "ต้องอนุมัติก่อนเข้า" → คำถามตอนขอเข้า: "รหัส VIP ของคุณ"
