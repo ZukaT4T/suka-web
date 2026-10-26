@@ -4,6 +4,7 @@
 //   19,999 / 39,999 / 79,999 = ตอบรับ + แจ้งว่าแอดมินจะนัดเรียน
 //   อื่นๆ / ไม่ผ่าน = ตอบว่าแอดมินจะตรวจให้ (ไม่ออกรหัส)
 // ต้องตั้งค่า secret: LINE_CHANNEL_SECRET, LINE_CHANNEL_TOKEN, EASYSLIP_KEY  และ KV: SUKA_KV
+// (ไม่บังคับ) SHEET_URL + SHEET_SECRET = ส่งผลตรวจสลิปลง Google Sheet "ออเดอร์และตรวจสลิป โค้ชสุขา"
 import { randomCode } from "../_lib.js";
 
 const PACKAGES = {
@@ -50,7 +51,7 @@ async function handleEvent(ev, env) {
   const name = await displayName(userId, env);
 
   if (res?.message === "duplicate_slip") {
-    await logSlip(env, { at: Date.now(), userId, name, result: "duplicate", transRef: res?.data?.transRef });
+    await logSlip(env, { at: Date.now(), userId, name, result: "duplicate", transRef: res?.data?.transRef, amount: Math.round(Number(res?.data?.amount?.amount) || 0) || undefined }, res?.data);
     return reply(ev.replyToken, env, "สลิปนี้เคยถูกใช้แล้วค่ะ ถ้าเป็นการโอนใหม่ รบกวนส่งสลิปใบล่าสุดนะคะ แอดมินจะตรวจสอบให้อีกครั้งค่ะ 🙏");
   }
   if (!r.ok || res?.status !== 200 || !res?.data) {
@@ -71,18 +72,18 @@ async function handleEvent(ev, env) {
 
   // กันใช้สลิปซ้ำในระบบเราเองด้วย
   if (transRef && (await env.SUKA_KV.get("slip:" + transRef))) {
-    await logSlip(env, { at: Date.now(), userId, name, result: "duplicate", amount, transRef });
+    await logSlip(env, { at: Date.now(), userId, name, result: "duplicate", amount, transRef }, d);
     return reply(ev.replyToken, env, "สลิปนี้เคยใช้รับรหัสไปแล้วค่ะ ถ้ามีปัญหาเข้าเรียน พิมพ์บอกแอดมินได้เลยนะคะ 🙏");
   }
 
   if (!recvOk) {
-    await logSlip(env, { at: Date.now(), userId, name, result: "wrong_receiver", amount, transRef, detail: rc.account?.name?.th || rc.account?.name?.en || "" });
+    await logSlip(env, { at: Date.now(), userId, name, result: "wrong_receiver", amount, transRef, detail: rc.account?.name?.th || rc.account?.name?.en || "" }, d);
     return reply(ev.replyToken, env, "ได้รับสลิปแล้วค่ะ แต่ชื่อบัญชีผู้รับไม่ตรงกับบัญชีของสุขาสอนเทรด แอดมินจะตรวจสอบและตอบกลับโดยเร็วนะคะ 🙏");
   }
 
   const pk = PACKAGES[amount];
   if (!pk) {
-    await logSlip(env, { at: Date.now(), userId, name, result: "amount_mismatch", amount, transRef });
+    await logSlip(env, { at: Date.now(), userId, name, result: "amount_mismatch", amount, transRef }, d);
     return reply(ev.replyToken, env, `ได้รับยอดโอน ${amount.toLocaleString("en-US")} บาทแล้วค่ะ ยอดนี้ไม่ตรงกับราคาคอร์ส แอดมินจะตรวจสอบและตอบกลับโดยเร็วนะคะ 🙏`);
   }
 
@@ -91,7 +92,7 @@ async function handleEvent(ev, env) {
   if (pk.key === "online") {
     let code; do { code = randomCode(); } while (await env.SUKA_KV.get("code:" + code));
     await env.SUKA_KV.put("code:" + code, JSON.stringify({ createdAt: Date.now(), note: `อัตโนมัติ · LINE: ${name} · ${transRef}`, course: "beginner48", lineUserId: userId, auto: true }));
-    await logSlip(env, { at: Date.now(), userId, name, result: "issued", amount, transRef, code });
+    await logSlip(env, { at: Date.now(), userId, name, result: "issued", amount, transRef, code, pkg: pk.name }, d);
     return reply(ev.replyToken, env,
       `ได้รับยอด 1,490 บาทเรียบร้อยค่ะ ขอบคุณที่สมัครเรียนนะคะ 🙏\n\n` +
       `รหัส VIP ของพี่: ${code}\n\n` +
@@ -103,7 +104,7 @@ async function handleEvent(ev, env) {
       code);
   }
 
-  await logSlip(env, { at: Date.now(), userId, name, result: "private_paid", amount, transRef, pkg: pk.name });
+  await logSlip(env, { at: Date.now(), userId, name, result: "private_paid", amount, transRef, pkg: pk.name }, d);
   return reply(ev.replyToken, env,
     `ได้รับยอด ${amount.toLocaleString("en-US")} บาทเรียบร้อยค่ะ 🙏\n` +
     `แพ็กเกจ: ${pk.name}\n\n` +
@@ -129,11 +130,46 @@ async function displayName(userId, env) {
   } catch { return ""; }
 }
 
-// เก็บประวัติ 200 รายการล่าสุด ให้หน้าแอดมินดู
-async function logSlip(env, entry) {
+// เก็บประวัติ 200 รายการล่าสุด ให้หน้าแอดมินดู + ส่งลง Google Sheet (ถ้าตั้ง SHEET_URL ไว้)
+async function logSlip(env, entry, slip) {
   const list = (await env.SUKA_KV.get("sliplog", "json")) || [];
   list.unshift(entry);
   await env.SUKA_KV.put("sliplog", JSON.stringify(list.slice(0, 200)));
+  if (slip !== undefined) await toSheet(env, entry, slip || {}).catch(() => {});
+}
+
+// ชื่อคอร์สต้องตรงกับแท็บ "ราคาคอร์ส" ในชีต
+const SHEET_COURSE = { 1490: "คอร์สออนไลน์", 19999: "คอร์สไพรเวท 2 เดือน", 39999: "คอร์สไพรเวท 6 เดือน", 79999: "คอร์สไพรเวท 12 เดือน" };
+const SHEET_RESULT = {
+  issued: "ผ่าน · ออกรหัส VIP อัตโนมัติ",
+  private_paid: "ผ่าน · ไพรเวท รอนัดเรียน",
+  duplicate: "สลิปซ้ำ",
+  wrong_receiver: "ผู้รับไม่ตรง",
+  amount_mismatch: "ยอดไม่ตรงราคาคอร์ส",
+};
+
+async function toSheet(env, e, d) {
+  if (!env.SHEET_URL || !env.SHEET_SECRET) return;
+  const rc = d.receiver || {};
+  await fetch(env.SHEET_URL, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    redirect: "follow",
+    body: JSON.stringify({
+      secret: env.SHEET_SECRET,
+      at: e.at,
+      name: e.name || "",
+      course: SHEET_COURSE[e.amount] || "",
+      amount: e.amount || "",
+      paidAt: d.date || "",
+      transRef: e.transRef || "",
+      recvName: rc.account?.name?.th || rc.account?.name?.en || "",
+      recvAcct: rc.account?.bank?.account || "",
+      result: SHEET_RESULT[e.result] || e.result,
+      code: e.code || "",
+      note: e.code ? "บอทส่งรหัส VIP + ลิงก์ห้องเรียน + OpenChat ให้แล้ว" : "",
+    }),
+  });
 }
 
 async function validSignature(body, sig, secret) {
