@@ -135,7 +135,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06e
 
 
   // ---- slips ----
-  var RES={issued:['ออกรหัสแล้ว','p-used'],private_paid:['ไพรเวท·รอนัด','p-new'],duplicate:['สลิปซ้ำ','p-rev'],wrong_receiver:['บัญชีผู้รับไม่ตรง','p-rev'],amount_mismatch:['ยอดไม่ตรง','p-rev'],not_slip:['ไม่ใช่สลิป','p-new'],error:['ระบบขัดข้อง','p-rev']};
+  var RES={issued:['ออกรหัสแล้ว','p-used'],private_paid:['ไพรเวท·รอนัด','p-new'],duplicate:['สลิปซ้ำ','p-rev'],wrong_receiver:['บัญชีผู้รับไม่ตรง','p-rev'],amount_mismatch:['ยอดไม่ตรง','p-rev'],not_slip:['ไม่ใช่สลิป','p-new'],error:['ระบบขัดข้อง','p-rev'],code_resent:['ส่งรหัสเดิมให้','p-used'],code_not_found:['ขอรหัส·ไม่พบ','p-new']};
   function loadSlips(){ api('/api/admin/slips').then(function(r){ if(!r.ok) return;
     $('slipReady').textContent = (r.ready.line&&r.ready.easyslip)?'· เชื่อมต่อแล้ว':'· ยังไม่ได้เชื่อม LINE/EasySlip';
     var tb=$('slips').querySelector('tbody'); tb.innerHTML='';

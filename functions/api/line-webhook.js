@@ -30,9 +30,18 @@ export async function onRequestPost(context) {
   return new Response("ok"); // ตอบ LINE ทันที แล้วทำงานต่อเบื้องหลัง
 }
 
+// ลูกค้าพิมพ์คำเหล่านี้ = ขอรหัส VIP เดิม (ส่งให้เฉพาะรหัสที่ออกให้บัญชี LINE นี้)
+const RESEND_WORDS = ["ขอรหัส", "ขอรหัสvip", "ขอรหัสใหม่", "ลืมรหัส", "รหัสหาย", "ขอรหัสเข้าเรียน"];
+
 async function handleEvent(ev, env) {
-  if (ev.type !== "message" || ev.message?.type !== "image" || !ev.replyToken) return;
+  if (ev.type !== "message" || !ev.replyToken) return;
   const userId = ev.source?.userId || "";
+  if (ev.message?.type === "text") {
+    const t = String(ev.message.text || "").replace(/\s+/g, "").toLowerCase();
+    if (RESEND_WORDS.includes(t)) return resendCode(ev, env, userId);
+    return;
+  }
+  if (ev.message?.type !== "image") return;
 
   // 1) ดึงรูปจาก LINE
   const img = await fetch(`https://api-data.line.me/v2/bot/message/${ev.message.id}/content`, {
@@ -92,6 +101,11 @@ async function handleEvent(ev, env) {
   if (pk.key === "online") {
     let code; do { code = randomCode(); } while (await env.SUKA_KV.get("code:" + code));
     await env.SUKA_KV.put("code:" + code, JSON.stringify({ createdAt: Date.now(), note: `อัตโนมัติ · LINE: ${name} · ${transRef}`, course: "beginner48", lineUserId: userId, auto: true }));
+    if (userId) {
+      const mine = (await env.SUKA_KV.get("user:" + userId, "json")) || [];
+      if (!mine.includes(code)) mine.push(code);
+      await env.SUKA_KV.put("user:" + userId, JSON.stringify(mine));
+    }
     await logSlip(env, { at: Date.now(), userId, name, result: "issued", amount, transRef, code, pkg: pk.name }, d);
     return reply(ev.replyToken, env,
       `ได้รับยอด 1,490 บาทเรียบร้อยค่ะ ขอบคุณที่สมัครเรียนนะคะ 🙏\n\n` +
@@ -109,6 +123,43 @@ async function handleEvent(ev, env) {
     `ได้รับยอด ${amount.toLocaleString("en-US")} บาทเรียบร้อยค่ะ 🙏\n` +
     `แพ็กเกจ: ${pk.name}\n\n` +
     `เดี๋ยวแอดมินทักไปนัดวันเริ่มเรียนกับโค้ชสุขาในแชตนี้นะคะ`);
+}
+
+async function resendCode(ev, env, userId) {
+  if (!userId) return;
+  let codes = (await env.SUKA_KV.get("user:" + userId, "json")) || [];
+  if (!codes.length) {
+    // รหัสที่ออกก่อนมีระบบนี้: ค้นจากรหัสทั้งหมด แล้วจำไว้
+    let cursor;
+    do {
+      const page = await env.SUKA_KV.list({ prefix: "code:", cursor });
+      for (const k of page.keys) {
+        const rec = await env.SUKA_KV.get(k.name, "json");
+        if (rec && rec.lineUserId === userId) codes.push(k.name.slice(5));
+      }
+      cursor = page.list_complete ? null : page.cursor;
+    } while (cursor);
+    if (codes.length) await env.SUKA_KV.put("user:" + userId, JSON.stringify(codes));
+  }
+  const active = [];
+  for (const c of codes) {
+    const rec = await env.SUKA_KV.get("code:" + c, "json");
+    if (rec && !rec.revoked) active.push({ code: c, usedBy: rec.usedBy || "" });
+  }
+  const name = await displayName(userId, env);
+  await logSlip(env, { at: Date.now(), userId, name, result: active.length ? "code_resent" : "code_not_found", code: active.map((a) => a.code).join(", ") });
+  if (!active.length) {
+    return reply(ev.replyToken, env,
+      "ยังไม่พบรหัส VIP ที่ผูกกับบัญชี LINE นี้ค่ะ\n" +
+      "ถ้าเคยโอนค่าเรียนแล้ว รบกวนส่งรูปสลิปเดิมหรือแจ้งชื่อผู้โอนในแชตนี้ แอดมินจะตรวจสอบและส่งรหัสให้นะคะ 🙏");
+  }
+  const lines = active.map((a) => `รหัส VIP: ${a.code}` + (a.usedBy ? `\nชื่อที่ใช้เข้าเรียน: ${a.usedBy}` : "")).join("\n\n");
+  return reply(ev.replyToken, env,
+    `ส่งรหัสเดิมให้นะคะ 🙏\n\n${lines}\n\n` +
+    `เข้าเรียนที่ ${LEARN_URL}\n` +
+    `กรอกชื่อให้ตรงกับที่ใช้ครั้งแรก + รหัส VIP ค่ะ\n\n` +
+    `กลุ่ม OpenChat:\n${OPENCHAT_URL}`,
+    active.length === 1 ? active[0].code : undefined);
 }
 
 async function reply(replyToken, env, text, code) {
