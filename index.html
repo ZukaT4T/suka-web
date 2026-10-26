@@ -214,6 +214,38 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   .pay-steps{grid-template-columns:1fr;text-align:left}
 }
 
+
+/* checkout modal */
+.co{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:rgba(11,29,74,.55);backdrop-filter:blur(4px)}
+.co[hidden]{display:none}
+.co-box{background:var(--white);border-radius:24px;width:min(560px,100%);max-height:100%;overflow:auto;box-shadow:var(--shadow-3);border:1.5px solid var(--gold);position:relative}
+.co-head{background:var(--navy-grad);color:#fff;padding:20px 22px 18px;border-radius:22px 22px 0 0;position:sticky;top:0;z-index:2}
+.co-head h3{color:#fff;font-size:22px}
+.co-head .eyebrow{color:var(--gold-light)}
+.co-x{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:20px;cursor:pointer}
+.co-x:focus-visible{outline:3px solid var(--gold)}
+.co-body{padding:18px 22px 22px;display:grid;gap:16px}
+.co-pk{display:grid;gap:8px}
+.co-pk label{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:14px;padding:10px 14px;cursor:pointer;background:var(--white);transition:border-color .15s,background .15s}
+.co-pk label:has(input:checked){border-color:var(--gold);background:#fffaf0;box-shadow:0 0 0 3px rgba(212,165,55,.18)}
+.co-pk input{accent-color:var(--navy);width:18px;height:18px;flex:0 0 auto}
+.co-pk .nm{flex:1;min-width:0;font-family:var(--display);font-weight:500;color:var(--navy);font-size:16px;line-height:1.3}
+.co-pk .nm small{display:block;font-family:var(--body);font-weight:500;color:var(--ink-2);font-size:13px}
+.co-pk .pr{font-family:var(--display);font-weight:700;color:var(--navy);font-size:18px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.co-amt{display:flex;justify-content:space-between;align-items:baseline;background:var(--cream);border-radius:14px;padding:12px 16px}
+.co-amt b{font-family:var(--display);font-size:30px;color:var(--navy);font-variant-numeric:tabular-nums}
+.co-pay{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center}
+.co-pay img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
+.co-acct{display:grid;gap:4px;font-size:15px}
+.co-acct .bk{font-family:var(--display);font-weight:500;color:var(--navy)}
+.co-acct code{font-family:var(--display);font-size:22px;font-weight:700;color:var(--navy);letter-spacing:.03em}
+.co-steps{display:grid;gap:8px;margin:0;padding:0;list-style:none;counter-reset:c}
+.co-steps li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.co-steps li::before{counter-increment:c;content:counter(c);flex:0 0 24px;height:24px;border-radius:50%;background:var(--gold-grad);color:#2b1f06;font-family:var(--display);font-size:13px;display:grid;place-items:center;margin-top:1px}
+.co .btn{width:100%}
+.co-note{font-size:13px;color:var(--ink-2);text-align:center}
+@media (max-width:480px){.co-pay{grid-template-columns:1fr;justify-items:center;text-align:center}.co-pay img{width:200px}}
+
 @media (max-width:820px){
   .hero,.rules,.final{grid-template-columns:1fr}
   .levels,.steps{grid-template-columns:1fr}
@@ -255,7 +287,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
     <h1 style="margin-top:12px">ดูกราฟทองเองเป็น<br>ตามระบบของ<span class="gold-text">โค้ชสุขา</span></h1>
     <p class="lead muted">48 บทเรียนสั้น 8–15 นาที เรียงตามลำดับการทำงานจริงของระบบ ตั้งแต่ยังไม่เคยเปิดกราฟ จนวางแผนเทรดได้เองทุกเช้า เรียนย้อนหลังได้ตลอดชีพ</p>
     <div class="cta">
-      <a class="btn btn-gold" href="https://lin.ee/qyLgapx" target="_blank" rel="noopener"><span class="line-ico">L</span>สมัครเรียนทาง LINE @zuka</a>
+      <a class="btn btn-gold" href="#pay" data-buy="online">สมัครเรียน 1,490 บาท</a>
       <a class="btn btn-ghost" href="#course">ดูรายการบทเรียน</a>
     </div>
     <p class="note muted">ไม่แจกสัญญาณ ไม่รับประกันกำไร สอนวิธีคิดให้ตัดสินใจเองได้</p>
@@ -331,7 +363,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
       <div class="pv-avg">เฉลี่ย ~10,000 บาท/เดือน</div>
       <p class="pv-quote">ดูแลใกล้ชิดแบบ 1:1 ปรับแผนให้ตรงสไตล์คุณ</p>
       <ul><li>วิเคราะห์แผนเทรดรายวัน</li><li>ปรับพฤติกรรมการเข้าออเดอร์</li><li>ตอบคำถามแบบใกล้ชิด</li><li class="meet">พบกัน 1 ครั้ง</li></ul>
-      <a class="btn btn-ghost" href="https://lin.ee/qyLgapx" target="_blank" rel="noopener">เลือกแพ็กเกจนี้</a>
+      <a class="btn btn-ghost" href="#pay" data-buy="pv2">เลือกแพ็กเกจนี้</a>
     </div>
     <div class="pv hot">
       <span class="pv-tag">แนะนำ</span>
@@ -341,7 +373,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
       <div class="pv-avg">เฉลี่ย ~6,666 บาท/เดือน</div>
       <p class="pv-quote">ดูแลใกล้ชิดแบบ 1:1 ปรับแผนให้ตรงสไตล์คุณ</p>
       <ul><li>วิเคราะห์แผนเทรดรายวัน</li><li>ปรับพฤติกรรมการเข้าออเดอร์</li><li>ตอบคำถามแบบใกล้ชิด</li><li class="meet">พบกัน 3 ครั้ง</li></ul>
-      <a class="btn btn-gold" href="https://lin.ee/qyLgapx" target="_blank" rel="noopener">เลือกแพ็กเกจนี้</a>
+      <a class="btn btn-gold" href="#pay" data-buy="pv6">เลือกแพ็กเกจนี้</a>
     </div>
     <div class="pv">
       <span class="pv-tag gold">Elite Program</span>
@@ -351,7 +383,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
       <div class="pv-avg">เฉลี่ย ~6,666 บาท/เดือน</div>
       <p class="pv-quote">สำหรับคนที่จริงจังกับผลลัพธ์ระดับมืออาชีพ</p>
       <ul><li>วิเคราะห์แผนเทรดรายวัน</li><li>ปรับพฤติกรรมการเข้าออเดอร์</li><li>ตอบคำถามแบบใกล้ชิด</li><li class="meet">พบกัน 6 ครั้ง</li></ul>
-      <a class="btn btn-ghost" href="https://lin.ee/qyLgapx" target="_blank" rel="noopener">เลือกแพ็กเกจนี้</a>
+      <a class="btn btn-ghost" href="#pay" data-buy="pv12">เลือกแพ็กเกจนี้</a>
     </div>
   </div>
   <div class="pv-notes">
@@ -365,12 +397,12 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <div class="eyebrow">วิธีสมัคร</div>
   <h2 style="margin-top:8px">สมัคร 4 ขั้น ใช้เวลาไม่ถึง 10 นาที</h2>
   <div class="steps">
-    <div class="step"><h3>โอนค่าเรียน</h3><p>สแกน QR หรือโอนเข้าบัญชีกสิกรไทยในหัวข้อ <a href="#pay">วิธีชำระเงิน</a></p></div>
-    <div class="step"><h3>ส่งสลิปทาง LINE</h3><p>ส่งสลิปใน LINE @zuka ตอบกลับภายใน 5 นาที</p></div>
+    <div class="step"><h3>กดสมัครเรียน</h3><p>เลือกคอร์ส แล้วสแกน QR หรือโอนเข้าบัญชีกสิกรไทย</p></div>
+    <div class="step"><h3>ส่งสลิปทาง LINE</h3><p>กดปุ่มส่งสลิป ระบบเปิดแชต LINE @zuka พร้อมข้อความชื่อคอร์ส แนบรูปสลิปแล้วกดส่ง</p></div>
     <div class="step"><h3>รับรหัส VIP</h3><p>ได้รหัสส่วนตัว 1 รหัส พร้อมลิงก์ห้องเรียนและลิงก์กลุ่มถาม-ตอบ</p></div>
     <div class="step"><h3>เข้าห้องเรียน</h3><p>กรอกรหัส VIP ครั้งเดียว ครั้งต่อไปเข้าได้เลย</p></div>
   </div>
-  <div style="margin-top:28px"><a class="btn btn-gold" href="https://lin.ee/qyLgapx" target="_blank" rel="noopener"><span class="line-ico">L</span>สมัครเรียนทาง LINE @zuka</a></div>
+  <div style="margin-top:28px"><a class="btn btn-gold" href="#pay" data-buy="online">สมัครเรียน 1,490 บาท</a></div>
 </section>
 
 <section id="pay">
@@ -390,7 +422,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
         <div><b>3</b>ส่งสลิปทาง LINE @zuka</div>
       </div>
       <p class="pay-prices">คอร์สออนไลน์ <b>1,490</b> · ไพรเวท 2 เดือน <b>19,999</b> · 6 เดือน <b>39,999</b> · 12 เดือน <b>79,999</b> บาท</p>
-      <div style="margin-top:18px"><a class="btn btn-gold" href="https://lin.ee/qyLgapx" target="_blank" rel="noopener"><span class="line-ico">L</span>ส่งสลิปทาง LINE</a> <span class="muted" style="font-size:14px;margin-left:8px">ตอบกลับภายใน 5 นาที · รับจำนวนจำกัด</span></div>
+      <div style="margin-top:18px"><a class="btn btn-gold" href="https://line.me/R/oaMessage/@925ixdwa/?%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B8%AA%E0%B8%A5%E0%B8%B4%E0%B8%9B%E0%B8%84%E0%B9%88%E0%B8%B2%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%99" target="_blank" rel="noopener"><span class="line-ico">L</span>ส่งสลิปทาง LINE</a> <span class="muted" style="font-size:14px;margin-left:8px">ตอบกลับภายใน 5 นาที · รับจำนวนจำกัด</span></div>
     </div>
   </div>
 </section>
@@ -442,7 +474,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
       <div class="eyebrow">เริ่มวันนี้</div>
       <h2 style="margin-top:8px"><span class="gold-text">1,490 บาท</span> ครั้งเดียว เรียนได้ตลอดชีพ</h2>
     </div>
-    <a class="btn btn-gold" href="https://lin.ee/qyLgapx" target="_blank" rel="noopener"><span class="line-ico">L</span>สมัครเรียนทาง LINE @zuka</a>
+    <a class="btn btn-gold" href="#pay" data-buy="online">สมัครเรียน 1,490 บาท</a>
   </div>
 </section>
 
@@ -452,10 +484,69 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
 </footer>
 </div>
 
-<div class="sticky"><div><b class="gold-text">1,490 บาท</b><div class="muted" style="font-size:12px">ตลอดชีพ</div></div><a class="btn btn-gold" href="https://lin.ee/qyLgapx" target="_blank" rel="noopener">สมัครทาง LINE</a></div>
+
+<div class="co" id="checkout" hidden role="dialog" aria-modal="true" aria-labelledby="coTitle">
+  <div class="co-box">
+    <div class="co-head">
+      <div class="eyebrow">สมัครเรียน · ชำระเงิน</div>
+      <h3 id="coTitle" style="margin-top:4px">เลือกคอร์ส แล้วสแกนจ่าย</h3>
+      <button class="co-x" type="button" id="coClose" aria-label="ปิด">×</button>
+    </div>
+    <div class="co-body">
+      <div class="co-pk" id="coPk">
+        <label><input type="radio" name="pk" value="online"><span class="nm">คอร์สออนไลน์ 48 บท<small>เรียนได้ตลอดชีพ · รับรหัส VIP</small></span><span class="pr">1,490</span></label>
+        <label><input type="radio" name="pk" value="pv2"><span class="nm">ไพรเวท 2 เดือน<small>1:1 · พบกัน 1 ครั้ง</small></span><span class="pr">19,999</span></label>
+        <label><input type="radio" name="pk" value="pv6"><span class="nm">ไพรเวท 6 เดือน<small>1:1 · พบกัน 3 ครั้ง · แนะนำ</small></span><span class="pr">39,999</span></label>
+        <label><input type="radio" name="pk" value="pv12"><span class="nm">ไพรเวท 12 เดือน<small>1:1 · พบกัน 6 ครั้ง · Elite</small></span><span class="pr">79,999</span></label>
+      </div>
+      <div class="co-amt"><span>ยอดที่ต้องโอน</span><b><span id="coAmt">1,490</span> บาท</b></div>
+      <div class="co-pay">
+        <img src="assets/promptpay-qr.jpg" alt="QR พร้อมเพย์ สำหรับชำระค่าเรียน" width="583" height="640">
+        <div class="co-acct">
+          <span class="bk">ธนาคารกสิกรไทย</span>
+          <span>ชื่อบัญชี: <b>ปุญภัช ภูธาราพงษ์</b></span>
+          <code id="coAcct">746-2-43028-5</code>
+          <button class="copy" type="button" id="coCopy" style="justify-self:start">คัดลอกเลขบัญชี</button>
+        </div>
+      </div>
+      <ol class="co-steps">
+        <li><span>สแกน QR หรือโอนเข้าบัญชี ยอด <b id="coAmt2">1,490</b> บาท</span></li>
+        <li><span>กดปุ่มด้านล่าง แล้วแนบรูปสลิปในแชต LINE @zuka</span></li>
+        <li><span id="coAfter">ทีมงานตรวจสลิปแล้วส่ง <b>รหัส VIP</b> + ลิงก์ห้องเรียนให้ในแชต</span></li>
+      </ol>
+      <a class="btn btn-gold" id="coLine" href="https://lin.ee/qyLgapx" target="_blank" rel="noopener"><span class="line-ico">L</span>ส่งสลิปทาง LINE</a>
+      <p class="co-note">ตอบกลับภายใน 5 นาที (เวลาทำการ) · รับจำนวนจำกัดในแต่ละรอบ</p>
+    </div>
+  </div>
+</div>
+
+<div class="sticky"><div><b class="gold-text">1,490 บาท</b><div class="muted" style="font-size:12px">ตลอดชีพ</div></div><a class="btn btn-gold" href="#pay" data-buy="online">สมัครเรียน</a></div>
 
 <script>
 (function(){var b=document.getElementById('copyAcct');if(!b)return;b.addEventListener('click',function(){var t='7462430285';var done=function(){b.textContent='คัดลอกแล้ว';setTimeout(function(){b.textContent='คัดลอกเลขบัญชี'},1500)};if(navigator.clipboard){navigator.clipboard.writeText(t).then(done).catch(function(){sel()})}else sel();function sel(){var r=document.createRange();r.selectNodeContents(document.getElementById('acctNo'));var s=getSelection();s.removeAllRanges();s.addRange(r);}});})();
+</script>
+<script>
+(function(){
+  var PK={online:{n:'คอร์สออนไลน์ 48 บท',p:1490},pv2:{n:'Private Coaching 2 เดือน',p:19999},pv6:{n:'Private Coaching 6 เดือน',p:39999},pv12:{n:'Private Coaching 12 เดือน',p:79999}};
+  var co=document.getElementById('checkout'); if(!co) return;
+  var last=null;
+  function fmt(n){return n.toLocaleString('en-US');}
+  function set(k){
+    var r=co.querySelector('input[value="'+k+'"]'); if(r) r.checked=true;
+    var it=PK[k]; document.getElementById('coAmt').textContent=fmt(it.p); document.getElementById('coAmt2').textContent=fmt(it.p);
+    document.getElementById('coAfter').innerHTML = k==='online' ? 'ทีมงานตรวจสลิปแล้วส่ง <b>รหัส VIP</b> + ลิงก์ห้องเรียนให้ในแชต' : 'ทีมงานตรวจสลิปแล้วนัดวันเริ่มเรียนกับโค้ชสุขาในแชต';
+    var msg='ส่งสลิปค่าเรียน\nคอร์ส: '+it.n+'\nยอดโอน: '+fmt(it.p)+' บาท\nชื่อผู้เรียน: ';
+    document.getElementById('coLine').href='https://line.me/R/oaMessage/@925ixdwa/?'+encodeURIComponent(msg);
+  }
+  function open(k){ last=document.activeElement; set(k||'online'); co.hidden=false; document.body.style.overflow='hidden'; var c=co.querySelector('input:checked'); if(c) c.focus(); }
+  function close(){ co.hidden=true; document.body.style.overflow=''; if(last&&last.focus) last.focus(); }
+  document.addEventListener('click',function(e){ var a=e.target.closest('[data-buy]'); if(!a) return; e.preventDefault(); open(a.getAttribute('data-buy')); });
+  co.addEventListener('change',function(e){ if(e.target.name==='pk') set(e.target.value); });
+  document.getElementById('coClose').addEventListener('click',close);
+  co.addEventListener('click',function(e){ if(e.target===co) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!co.hidden) close(); });
+  document.getElementById('coCopy').addEventListener('click',function(){ var b=this; var done=function(){b.textContent='คัดลอกแล้ว';setTimeout(function(){b.textContent='คัดลอกเลขบัญชี'},1500)}; if(navigator.clipboard) navigator.clipboard.writeText('7462430285').then(done).catch(function(){}); });
+})();
 </script>
 <script src="lessons.js"></script>
 <script>
