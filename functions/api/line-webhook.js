@@ -7,7 +7,6 @@
 import { randomCode } from "../_lib.js";
 
 const PACKAGES = {
-  2: { key: "online", name: "คอร์สออนไลน์ 48 บท (ทดสอบ)" }, // TEST-ONLY: ลบหลังทดสอบ
   1490: { key: "online", name: "คอร์สออนไลน์ 48 บท" },
   19999: { key: "pv2", name: "Private Coaching 2 เดือน" },
   39999: { key: "pv6", name: "Private Coaching 6 เดือน" },
