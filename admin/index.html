@@ -73,7 +73,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06e
   </div>
 
   <div class="card">
-    <h2>ลิงก์คลิปบทเรียน</h2>
+    <h2>ลิงก์คลิปบทเรียน + เอกสาร PDF</h2>
     <p class="muted">วางลิงก์ embed จาก Bunny Stream / Vimeo / YouTube ของแต่ละ EP นักเรียนที่ login เท่านั้นที่เห็นลิงก์ · ว่าง = "คลิปกำลังผลิต"</p>
     <div class="tablewrap"><table class="vid" id="videos"><thead><tr><th style="width:70px">EP</th><th class="hide-m" style="width:32%">บท</th><th>ลิงก์ embed (https://...)</th></tr></thead><tbody></tbody></table></div>
     <div class="row" style="margin-top:12px"><button class="btn" id="saveVid">บันทึกลิงก์คลิป</button><span class="msg" id="vidMsg"></span></div>
@@ -150,6 +150,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06e
   function loadVideos(){
     api('/api/admin/videos').then(function(r){
       var v=(r.ok&&r.videos)||{}; var tb=$('videos').querySelector('tbody'); tb.innerHTML='';
+      [['DOC_MANUAL','คู่มือประกอบการเรียน (PDF)'],['DOC_NOTEBOOK','สมุดบันทึก + เช็คลิสต์ (PDF)']].forEach(function(d){ var tr=document.createElement('tr'); tr.innerHTML='<td><b>PDF</b></td><td class="hide-m muted">'+d[1]+'</td><td><input data-ep="'+d[0]+'" value="'+(v[d[0]]||'').replace(/"/g,'&quot;')+'" placeholder="ลิงก์ Google Drive / ไฟล์ PDF"></td>'; tb.appendChild(tr); });
       eps.forEach(function(e){ var tr=document.createElement('tr'); tr.innerHTML='<td><b>'+e.ep+'</b></td><td class="hide-m muted">'+e.title+'</td><td><input data-ep="'+e.ep+'" value="'+(v[e.ep]||'').replace(/"/g,'&quot;')+'" placeholder="https://iframe.mediadelivery.net/embed/…"></td>'; tb.appendChild(tr); });
     });
   }

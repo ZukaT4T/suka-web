@@ -84,6 +84,10 @@ details.mod summary::-webkit-details-marker{display:none}
 .mark{display:flex;align-items:center;gap:10px}
 .demo{margin-top:24px;padding:12px 14px;border:1px dashed var(--line);border-radius:8px;font-size:13px;color:var(--ink-2)}
 
+.docs{margin-top:22px;background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.doc-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.doc{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1.5px solid var(--navy);color:var(--navy);text-decoration:none;font-family:var(--display);font-size:15px;background:var(--paper-2)}
+.doc.off{border-style:dashed;color:var(--ink-2);border-color:var(--line)}
 @media (max-width:900px){
   .app{grid-template-columns:1fr}
   .side{position:static;max-height:none}
@@ -130,6 +134,10 @@ details.mod summary::-webkit-details-marker{display:none}
         <button class="btn btn-gold" id="nextBtn">บทถัดไป →</button>
         <a class="btn" id="askBtn" target="_blank" rel="noopener">ถามในกลุ่ม LINE</a>
       </div>
+    </div>
+    <div class="docs" id="docs">
+      <div class="eyebrow">เอกสารประกอบ (PDF)</div>
+      <div class="doc-row" id="docList"></div>
     </div>
   </main>
 </div>
@@ -181,9 +189,12 @@ details.mod summary::-webkit-details-marker{display:none}
     var who=document.getElementById('who'); who.hidden=false;
     document.getElementById('whoName').textContent=m.name; document.getElementById('av').textContent=m.name.slice(0,1);
     var ask=document.getElementById('askBtn'); ask.href = D.openchat || D.lineOA;
-    buildList();
+    buildList(); renderDocs();
     var first = eps.findIndex(function(e){ return !prog[e.ep]; }); show(first<0?0:first);
   }
+
+  function renderDocs(){ var L=document.getElementById('docList'); if(!L) return; L.innerHTML='';
+    [['DOC_MANUAL','คู่มือประกอบการเรียน'],['DOC_NOTEBOOK','สมุดบันทึก + เช็คลิสต์']].forEach(function(d){ var u=videos[d[0]]; var a=document.createElement(u?'a':'span'); a.className='doc'+(u?'':' off'); a.textContent=(u?'⬇ ':'')+d[1]+(u?'':' · เร็วๆ นี้'); if(u){a.href=u;a.target='_blank';a.rel='noopener';} L.appendChild(a); }); }
   function vid(e){ return videos[e.ep] || e.video || ''; }
 
   var syncT=null;

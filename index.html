@@ -169,6 +169,21 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
 .sticky b{font-family:var(--display);font-size:22px;color:var(--navy)}
 
 
+
+.why{font-size:13px;color:var(--blue);margin-left:6px}
+.vt-wrap{overflow-x:auto;margin-top:24px}
+.vt{width:100%;max-width:760px;border-collapse:separate;border-spacing:0;background:var(--white);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-2)}
+.vt th{font-family:var(--display);font-weight:500;text-align:left;padding:14px 20px;background:var(--navy-grad);color:#fff;font-size:15px}
+.vt th:last-child,.vt td:last-child{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.vt td{padding:14px 20px;border-top:1px solid var(--line);vertical-align:top;font-size:17px}
+.vt td b{font-family:var(--display);font-weight:500;color:var(--navy);display:block}
+.vt td span{display:block;font-size:14px;color:var(--ink-2);margin-top:2px}
+.vt tbody td:last-child{font-family:var(--display);font-weight:600;color:var(--navy)}
+.vt .sum td{font-family:var(--display);font-weight:500;background:var(--cream)}
+.vt .sum s{color:var(--red);text-decoration-thickness:2px}
+.vt .vt-pay td{font-family:var(--display);font-weight:700;font-size:22px;color:var(--navy);background:#fffaf0;border-top:2px solid var(--gold)}
+.vt .vt-pay td:last-child{font-size:30px}
+
 /* private course */
 .pv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px;align-items:stretch}
 .pv{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:26px 22px;box-shadow:var(--shadow-1);display:flex;flex-direction:column;gap:12px;position:relative;transition:transform .2s,box-shadow .2s}
@@ -300,18 +315,40 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <aside class="pricecard" aria-label="ราคาคอร์ส">
     <span class="ribbon">ตลอดชีพ</span>
     <div class="eyebrow">สมัครวันนี้ ราคาพิเศษ</div>
-    <div class="was">จากมูลค่ากว่า <s>11,994 บาท</s></div>
+    <div class="was">จากมูลค่ารวม <s>15,992 บาท</s> <a href="#value" class="why">ดูที่มา</a></div>
     <div class="big gold-text">1,490 <small>บาท</small></div>
-    <div class="save">ประหยัด 10,504 บาท</div>
+    <div class="save">ประหยัด 14,502 บาท</div>
     <ul>
       <li>คลิปบทเรียน 48 EP รวมราว 8–10 ชั่วโมง</li>
       <li>เข้าดูได้ตลอดชีพ ไม่มีวันหมดอายุ</li>
       <li>เรียนได้ทุกเครื่อง ทั้งมือถือและคอมพิวเตอร์</li>
-      <li>เข้ากลุ่ม LINE OpenChat คุยกับโค้ชโดยตรง และเพื่อนเทรดเดอร์ทุกคน</li>
+      <li>ดูแลในกลุ่ม LINE OpenChat 1 ปี คุยกับโค้ชโดยตรง และเพื่อนเทรดเดอร์ทุกคน</li>
+      <li>คู่มือประกอบการเรียน + สมุดบันทึก/เช็คลิสต์ (ไฟล์ PDF)</li>
     </ul>
     <img class="chart" src="assets/chart.jpg" alt="ภาพประกอบคอร์สเทรดออนไลน์" width="1000" height="563" loading="lazy">
   </aside>
   </div>
+</section>
+
+<section id="value" class="value-sec">
+  <div class="eyebrow">ที่มาของมูลค่า</div>
+  <h2 style="margin-top:8px">มูลค่ารวม 15,992 บาท สมัครวันนี้จ่ายเพียง 1,490 บาท</h2>
+  <div class="vt-wrap">
+    <table class="vt">
+      <thead><tr><th>สิ่งที่ได้รับ</th><th>ราคาปกติ</th></tr></thead>
+      <tbody>
+        <tr><td><b>คอร์สสอน 48 บท + ดูแลในกลุ่มพูดคุย 1 ปี</b><span>ปกติต่ออายุทุก 2 เดือน ครั้งละ 1,999 บาท × 6 ครั้ง</span></td><td>11,994</td></tr>
+        <tr><td><b>คู่มือประกอบการเรียน</b><span>ไฟล์ PDF ดาวน์โหลดในห้องเรียน</span></td><td>2,999</td></tr>
+        <tr><td><b>สมุดบันทึก + สมุดจดเช็คลิสต์</b><span>ไฟล์ PDF ดาวน์โหลดในห้องเรียน</span></td><td>999</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="sum"><td>มูลค่ารวม</td><td><s>15,992</s></td></tr>
+        <tr class="vt-pay"><td>สมัครวันนี้ จ่ายเพียง</td><td>1,490</td></tr>
+      </tfoot>
+    </table>
+  </div>
+  <p class="muted" style="margin-top:12px;font-size:14px">คลิปบทเรียนเข้าดูได้ตลอดชีพ · การดูแลในกลุ่ม OpenChat รวมให้ 1 ปีนับจากวันสมัคร หลังจากนั้นต่ออายุได้ทุก 2 เดือน ครั้งละ 1,999 บาท</p>
+  <div style="margin-top:20px"><a class="btn btn-gold" href="#pay" data-buy="online">สมัครเรียน 1,490 บาท</a></div>
 </section>
 
 <section id="level">
@@ -465,7 +502,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <h2 style="margin-top:8px">ก่อนตัดสินใจ</h2>
   <div class="faq">
     <details><summary>ไม่เคยเทรดเลย เรียนได้ไหม</summary><p>ได้ ภาค 0 ทั้ง 10 บท สร้างมาสำหรับคนที่ยังไม่เคยเปิดกราฟ เริ่มจากศัพท์ 7 คำ เปิดบัญชีทดลอง และอ่านแท่งเทียน</p></details>
-    <details><summary>"ตลอดชีพ" หมายถึงอะไร</summary><p>เข้าดูคลิปทั้ง 48 บทได้ไม่จำกัดครั้งและไม่มีวันหมดอายุ ส่วนกลุ่มถาม-ตอบเปิดให้นักเรียนทุกคนตามที่โค้ชประกาศ</p></details>
+    <details><summary>"ตลอดชีพ" หมายถึงอะไร</summary><p>เข้าดูคลิปทั้ง 48 บทได้ไม่จำกัดครั้งและไม่มีวันหมดอายุ ส่วนการดูแลในกลุ่ม OpenChat รวมให้ 1 ปีนับจากวันสมัคร หลังจากนั้นต่ออายุได้ทุก 2 เดือน ครั้งละ 1,999 บาท</p></details>
     <details><summary>เรียนบนมือถือได้ไหม</summary><p>ได้ ห้องเรียนเปิดได้ทั้งมือถือและคอมพิวเตอร์ ความคืบหน้าบันทึกไว้ตามบัญชีของคุณ</p></details>
     <details><summary>ต้องใช้โบรกเกอร์ไหน</summary><p>ระบบใช้ได้กับกราฟ XAUUSD ทุกโบรกเกอร์ ในคอร์สมีคู่มือเปิดบัญชีทดลองและบัญชีจริงให้ แต่ไม่บังคับ</p></details>
     <details><summary>คอร์สไพรเวทเรียนที่ไหน</summary><p>มาเจอโค้ชที่โคราชไม่มีค่าใช้จ่ายเพิ่ม ถ้าให้โค้ชไปหามีค่าเดินทาง 3,000 – 5,000 บาท/ครั้ง และชวนเพื่อนมาหารค่าเรียนได้สูงสุด 3 คน</p></details>
@@ -477,7 +514,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <div class="final">
     <div>
       <div class="eyebrow">เริ่มวันนี้</div>
-      <h2 style="margin-top:8px">จากมูลค่ากว่า <s style="opacity:.7;font-weight:500">11,994</s> สมัครวันนี้เพียง <span class="gold-text">1,490 บาท</span></h2><p style="margin-top:8px;color:#dbe3f5">เรียนได้ตลอดชีพ · เข้ากลุ่ม OpenChat คุยกับโค้ชสุขาโดยตรง</p>
+      <h2 style="margin-top:8px">จากมูลค่ารวม <s style="opacity:.7;font-weight:500">15,992</s> สมัครวันนี้เพียง <span class="gold-text">1,490 บาท</span></h2><p style="margin-top:8px;color:#dbe3f5">คลิปเรียนได้ตลอดชีพ · ดูแลในกลุ่ม OpenChat 1 ปี · คู่มือ + สมุดเช็คลิสต์ PDF</p>
     </div>
     <a class="btn btn-gold" href="#pay" data-buy="online">สมัครเรียน 1,490 บาท</a>
   </div>
@@ -499,7 +536,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
     </div>
     <div class="co-body">
       <div class="co-pk" id="coPk">
-        <label><input type="radio" name="pk" value="online"><span class="nm">คอร์สออนไลน์ 48 บท<small>จาก <s>11,994</s> · ตลอดชีพ · รหัส VIP + OpenChat</small></span><span class="pr">1,490</span></label>
+        <label><input type="radio" name="pk" value="online"><span class="nm">คอร์สออนไลน์ 48 บท<small>จาก <s>15,992</s> · ตลอดชีพ · ดูแล 1 ปี · คู่มือ PDF</small></span><span class="pr">1,490</span></label>
         <label><input type="radio" name="pk" value="pv2"><span class="nm">ไพรเวท 2 เดือน<small>1:1 · พบกัน 1 ครั้ง</small></span><span class="pr">19,999</span></label>
         <label><input type="radio" name="pk" value="pv6"><span class="nm">ไพรเวท 6 เดือน<small>1:1 · พบกัน 3 ครั้ง · แนะนำ</small></span><span class="pr">39,999</span></label>
         <label><input type="radio" name="pk" value="pv12"><span class="nm">ไพรเวท 12 เดือน<small>1:1 · พบกัน 6 ครั้ง · Elite</small></span><span class="pr">79,999</span></label>
