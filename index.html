@@ -154,7 +154,9 @@ details.mod summary::-webkit-details-marker{display:none}
 .final .gold-text{color:var(--gold-light)}
 .final::before{content:"";position:absolute;left:-10%;bottom:-60%;width:50%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(212,165,55,.45),transparent 65%)}
 .final::after{content:"";position:absolute;right:-8%;top:-70%;width:40%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(242,140,40,.35),transparent 65%)}
-.final>*{position:relative}
+.final::before,.final::after,.band::before,.level::after,.level::before,.photo::before,.photo::after{pointer-events:none}
+.final>*{position:relative;z-index:1}
+.band>*{position:relative;z-index:1}
 .final .btn-gold{font-size:18px;padding:18px 32px}
 footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;gap:8px;border-top:1px solid var(--line)}
 
