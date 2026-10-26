@@ -85,7 +85,10 @@ nav{display:flex;align-items:center;justify-content:space-between;gap:16px;paddi
 .stage:hover .pricecard{transform:rotateY(-3deg) rotateX(1deg)}
 .pricecard::before{content:"";position:absolute;inset:0;border-radius:22px;padding:2px;background:linear-gradient(135deg,rgba(212,165,55,1),rgba(35,83,196,.35) 45%,rgba(212,165,55,.9));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
 .ribbon{position:absolute;top:-14px;right:22px;background:linear-gradient(180deg,#ff9f3f,var(--orange-deep));color:#fff;font-family:var(--display);font-size:13px;font-weight:500;padding:6px 14px;border-radius:999px;box-shadow:0 6px 14px rgba(242,140,40,.45),inset 0 1px 0 rgba(255,255,255,.5)}
-.pricecard .big{font-family:var(--display);font-size:60px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;margin-top:10px;color:var(--navy)}
+.pricecard .was{font-size:15px;color:var(--ink-2);margin-top:8px}
+.pricecard .was s{color:var(--red);text-decoration-thickness:2px}
+.pricecard .save{display:inline-block;margin-top:8px;font-family:var(--display);font-size:13px;font-weight:500;color:#fff;background:linear-gradient(180deg,#ff9f3f,var(--orange-deep));padding:3px 10px;border-radius:999px}
+.pricecard .big{font-family:var(--display);font-size:60px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;margin-top:4px;color:var(--navy)}
 .pricecard .big small{font-size:18px;font-weight:400;color:var(--ink-2)}
 .pricecard ul{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:11px;font-size:15px}
 .pricecard li{display:flex;gap:10px;align-items:flex-start}
@@ -296,13 +299,15 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <figure class="photo" style="margin:0"><img src="assets/suka.png" alt="โค้ชสุขา" width="520" height="840"><figcaption class="name"><b>โค้ชสุขา</b> · ผู้สอน</figcaption></figure>
   <aside class="pricecard" aria-label="ราคาคอร์ส">
     <span class="ribbon">ตลอดชีพ</span>
-    <div class="eyebrow">ค่าเรียนครั้งเดียว</div>
+    <div class="eyebrow">สมัครวันนี้ ราคาพิเศษ</div>
+    <div class="was">จากมูลค่ากว่า <s>11,994 บาท</s></div>
     <div class="big gold-text">1,490 <small>บาท</small></div>
+    <div class="save">ประหยัด 10,504 บาท</div>
     <ul>
       <li>คลิปบทเรียน 48 EP รวมราว 8–10 ชั่วโมง</li>
       <li>เข้าดูได้ตลอดชีพ ไม่มีวันหมดอายุ</li>
       <li>เรียนได้ทุกเครื่อง ทั้งมือถือและคอมพิวเตอร์</li>
-      <li>กลุ่มถาม-ตอบ LINE เฉพาะนักเรียน</li>
+      <li>เข้ากลุ่ม LINE OpenChat คุยกับโค้ชโดยตรง และเพื่อนเทรดเดอร์ทุกคน</li>
     </ul>
     <img class="chart" src="assets/chart.jpg" alt="ภาพประกอบคอร์สเทรดออนไลน์" width="1000" height="563" loading="lazy">
   </aside>
@@ -399,7 +404,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <div class="steps">
     <div class="step"><h3>กดสมัครเรียน</h3><p>เลือกคอร์ส แล้วสแกน QR หรือโอนเข้าบัญชีกสิกรไทย</p></div>
     <div class="step"><h3>ส่งสลิปทาง LINE</h3><p>กดปุ่มส่งสลิป ระบบเปิดแชต LINE @zuka พร้อมข้อความชื่อคอร์ส แนบรูปสลิปแล้วกดส่ง</p></div>
-    <div class="step"><h3>รับรหัส VIP</h3><p>ได้รหัสส่วนตัว 1 รหัส พร้อมลิงก์ห้องเรียนและลิงก์กลุ่มถาม-ตอบ</p></div>
+    <div class="step"><h3>รับรหัส VIP</h3><p>ได้รหัสส่วนตัว 1 รหัส พร้อมลิงก์ห้องเรียนและลิงก์เข้ากลุ่ม OpenChat กับโค้ช</p></div>
     <div class="step"><h3>เข้าห้องเรียน</h3><p>กรอกรหัส VIP ครั้งเดียว ครั้งต่อไปเข้าได้เลย</p></div>
   </div>
   <div style="margin-top:28px"><a class="btn btn-gold" href="#pay" data-buy="online">สมัครเรียน 1,490 บาท</a></div>
@@ -472,7 +477,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <div class="final">
     <div>
       <div class="eyebrow">เริ่มวันนี้</div>
-      <h2 style="margin-top:8px"><span class="gold-text">1,490 บาท</span> ครั้งเดียว เรียนได้ตลอดชีพ</h2>
+      <h2 style="margin-top:8px">จากมูลค่ากว่า <s style="opacity:.7;font-weight:500">11,994</s> สมัครวันนี้เพียง <span class="gold-text">1,490 บาท</span></h2><p style="margin-top:8px;color:#dbe3f5">เรียนได้ตลอดชีพ · เข้ากลุ่ม OpenChat คุยกับโค้ชสุขาโดยตรง</p>
     </div>
     <a class="btn btn-gold" href="#pay" data-buy="online">สมัครเรียน 1,490 บาท</a>
   </div>
@@ -494,7 +499,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
     </div>
     <div class="co-body">
       <div class="co-pk" id="coPk">
-        <label><input type="radio" name="pk" value="online"><span class="nm">คอร์สออนไลน์ 48 บท<small>เรียนได้ตลอดชีพ · รับรหัส VIP</small></span><span class="pr">1,490</span></label>
+        <label><input type="radio" name="pk" value="online"><span class="nm">คอร์สออนไลน์ 48 บท<small>จาก <s>11,994</s> · ตลอดชีพ · รหัส VIP + OpenChat</small></span><span class="pr">1,490</span></label>
         <label><input type="radio" name="pk" value="pv2"><span class="nm">ไพรเวท 2 เดือน<small>1:1 · พบกัน 1 ครั้ง</small></span><span class="pr">19,999</span></label>
         <label><input type="radio" name="pk" value="pv6"><span class="nm">ไพรเวท 6 เดือน<small>1:1 · พบกัน 3 ครั้ง · แนะนำ</small></span><span class="pr">39,999</span></label>
         <label><input type="radio" name="pk" value="pv12"><span class="nm">ไพรเวท 12 เดือน<small>1:1 · พบกัน 6 ครั้ง · Elite</small></span><span class="pr">79,999</span></label>
