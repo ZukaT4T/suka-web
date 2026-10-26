@@ -67,6 +67,12 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06e
   </div>
 
   <div class="card">
+    <div class="row" style="justify-content:space-between"><h2>สลิปที่บอทตรวจ <span class="muted" id="slipReady"></span></h2><button class="btn ghost small" id="slipReload">โหลดใหม่</button></div>
+    <p class="muted">ลูกค้าส่งสลิปใน LINE @zuka → ตรวจกับ EasySlip อัตโนมัติ · 1,490 = ออกรหัส VIP ให้ทันที · ไพรเวท = แอดมินนัดเรียนต่อ · <b>สีส้ม</b> = แอดมินต้องตรวจเอง</p>
+    <div class="tablewrap"><table id="slips"><thead><tr><th>เวลา</th><th>LINE</th><th>ยอด</th><th>ผล</th><th>รหัส/หมายเหตุ</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <div class="card">
     <h2>ลิงก์คลิปบทเรียน</h2>
     <p class="muted">วางลิงก์ embed จาก Bunny Stream / Vimeo / YouTube ของแต่ละ EP นักเรียนที่ login เท่านั้นที่เห็นลิงก์ · ว่าง = "คลิปกำลังผลิต"</p>
     <div class="tablewrap"><table class="vid" id="videos"><thead><tr><th style="width:70px">EP</th><th class="hide-m" style="width:32%">บท</th><th>ลิงก์ embed (https://...)</th></tr></thead><tbody></tbody></table></div>
@@ -92,7 +98,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06e
     $('keyMsg').textContent='กำลังตรวจสอบ…'; $('keyMsg').className='msg';
     api('/api/admin/codes').then(function(r){
       if(!r.ok){ $('keyMsg').textContent=r.error||'กุญแจไม่ถูกต้อง'; $('keyMsg').className='msg err'; try{sessionStorage.removeItem(KEY)}catch(e){} return; }
-      $('login').hidden=true; $('panel').hidden=false; renderCodes(r.codes); loadVideos();
+      $('login').hidden=true; $('panel').hidden=false; renderCodes(r.codes); loadVideos(); loadSlips();
     }).catch(function(){ $('keyMsg').textContent='ติดต่อเซิร์ฟเวอร์ไม่ได้'; $('keyMsg').className='msg err'; });
   }
 
@@ -126,6 +132,18 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06e
       $('note').value=''; reload();
     });
   };
+
+
+  // ---- slips ----
+  var RES={issued:['ออกรหัสแล้ว','p-used'],private_paid:['ไพรเวท·รอนัด','p-new'],duplicate:['สลิปซ้ำ','p-rev'],wrong_receiver:['บัญชีผู้รับไม่ตรง','p-rev'],amount_mismatch:['ยอดไม่ตรง','p-rev'],not_slip:['ไม่ใช่สลิป','p-new'],error:['ระบบขัดข้อง','p-rev']};
+  function loadSlips(){ api('/api/admin/slips').then(function(r){ if(!r.ok) return;
+    $('slipReady').textContent = (r.ready.line&&r.ready.easyslip)?'· เชื่อมต่อแล้ว':'· ยังไม่ได้เชื่อม LINE/EasySlip';
+    var tb=$('slips').querySelector('tbody'); tb.innerHTML='';
+    if(!r.slips.length){ tb.innerHTML='<tr><td colspan="5" class="muted">ยังไม่มีสลิป</td></tr>'; return; }
+    r.slips.forEach(function(x){ var m=RES[x.result]||[x.result,'p-new']; var tr=document.createElement('tr');
+      tr.innerHTML='<td class="muted">'+fmt(x.at)+'</td><td>'+(x.name||'')+'</td><td>'+(x.amount?x.amount.toLocaleString('en-US'):'')+'</td><td><span class="pill '+m[1]+'">'+m[0]+'</span></td><td>'+(x.code?'<code>'+x.code+'</code>':(x.pkg||x.detail||''))+'</td>'; tb.appendChild(tr); });
+  }); }
+  $('slipReload').onclick=loadSlips;
 
   // ---- videos ----
   var eps=[]; (window.SUKA||{modules:[]}).modules.forEach(function(m){ m.eps.forEach(function(e){ eps.push(e); }); });
