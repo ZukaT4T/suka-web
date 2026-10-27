@@ -33,12 +33,90 @@ export async function onRequestPost(context) {
 // ลูกค้าพิมพ์คำเหล่านี้ = ขอรหัส VIP เดิม (ส่งให้เฉพาะรหัสที่ออกให้บัญชี LINE นี้)
 const RESEND_WORDS = ["ขอรหัส", "ขอรหัสvip", "ขอรหัสใหม่", "ลืมรหัส", "รหัสหาย", "ขอรหัสเข้าเรียน"];
 
+// ลูกค้าพิมพ์ "สมัคร" / "สนใจ" หรือกดปุ่ม "รายละเอียดคอร์ส" ในริชเมนู = ส่งการ์ดคอร์สรูปเต็ม (Flex) + ลิงก์เว็บ
+const COURSE_WORDS = ["สมัคร", "สนใจ", "ดูคอร์ส", "รายละเอียดคอร์ส", "สมัครเรียน"];
+const SITE = "https://www.zuka-t4tacademy.com";
+// แตะการ์ด = ส่งข้อความนี้เข้าแชท แล้วบอทตอบลิงก์เว็บของคอร์สนั้น
+const PICK = {
+  online: { text: "สนใจคอร์สออนไลน์ 1,490 บาท ค่ะ", img: "flex-online.jpg", label: "คอร์สออนไลน์",
+    reply: "คอร์สออนไลน์ GOLD TRADING FOUNDATION 1,490 บาท 🎯\n\nสมัครและดูวิธีชำระเงินได้ที่นี่ค่ะ 👉\n" + SITE + "/?buy=online#pay\n\nโอนแล้วส่งรูปสลิปในแชตนี้ได้เลย ระบบจะส่งรหัส VIP + ลิงก์ห้องเรียนให้ทันทีค่ะ 🙏" },
+  pv2: { text: "สนใจ Private Coaching 2 เดือน (19,999 บาท) ค่ะ", img: "flex-pv2.jpg", label: "Private 2 เดือน",
+    reply: "Private Coaching 1:1 · 2 เดือน 19,999 บาท\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + SITE + "/?buy=pv2#private\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะนัดวันเริ่มเรียนกับโค้ชสุขาให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" },
+  pv6: { text: "สนใจ Private Coaching 6 เดือน (39,999 บาท) ค่ะ", img: "flex-pv6.jpg", label: "Private 6 เดือน",
+    reply: "Private Coaching 1:1 · 6 เดือน 39,999 บาท (BEST VALUE)\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + SITE + "/?buy=pv6#private\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะนัดวันเริ่มเรียนกับโค้ชสุขาให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" },
+};
+const norm = (x) => String(x || "").replace(/\s+/g, "").toLowerCase();
+const PICK_BY_TEXT = Object.fromEntries(Object.values(PICK).map((p) => [norm(p.text), p]));
+
+function courseFlex() {
+  return {
+    type: "flex",
+    altText: "คอร์สสุขาสอนเทรด: ออนไลน์ 1,490 · Private 2 เดือน 19,999 · Private 6 เดือน 39,999 บาท",
+    contents: {
+      type: "carousel",
+      contents: Object.values(PICK).map((p) => ({
+        type: "bubble",
+        size: "giga",
+        hero: { type: "image", url: SITE + "/assets/cards/" + p.img, size: "full", aspectRatio: "2:3", aspectMode: "cover",
+          action: { type: "message", label: p.label, text: p.text } },
+      })),
+    },
+  };
+}
+
+async function replyMessages(replyToken, env, messages) {
+  await fetch("https://api.line.me/v2/bot/message/reply", {
+    method: "POST",
+    headers: { "content-type": "application/json", authorization: `Bearer ${env.LINE_CHANNEL_TOKEN}` },
+    body: JSON.stringify({ replyToken, messages }),
+  });
+}
+
+async function sendCourseCards(ev, env) {
+  await replyMessages(ev.replyToken, env, [courseFlex(), { type: "text", text: "👉 ดูรายละเอียดคอร์สทั้งหมดที่เว็บไซต์ได้เลยค่ะ\n" + SITE }]);
+}
+
+// ข้อความทักทายเพื่อนใหม่ (ส่งโดยบอท เพื่อใช้การ์ดรูปเต็มได้)
+const GREET_PAIN = `เรียนเทรดมาตั้งเยอะ... แต่ทำไมพอเจอกราฟจริง กลับไม่รู้ว่าจะต้องทำอะไร?
+
+❌ เปิดกราฟมาแล้วไม่รู้จะวิเคราะห์ยังไง
+❌ เรียนมาหลายระบบ แต่ยังจับต้นชนปลายไม่ถูก
+❌ เห็นกราฟวิ่งแรงก็กลัวตกรถ รีบเข้าออเดอร์
+❌ พอขาดทุนก็อยากเอาคืน จนหลุดแผน
+❌ รู้ทฤษฎีเยอะ แต่เอามาใช้กับหน้างานจริงไม่ได้
+
+ถ้าพี่ ๆ กำลังเจอปัญหาเหล่านี้ สุขาอยากชวนมาฝึกด้วยกันค่ะ ❤️
+
+เพราะสุขาเชื่อว่า...
+
+การเป็นเทรดเดอร์ที่ดี ไม่ใช่การทายว่ากราฟจะขึ้นหรือลงให้ถูกทุกครั้ง แต่คือการรู้ว่าตัวเองกำลังทำอะไร และมีแผนรองรับทุกการตัดสินใจ`;
+const GREET_HOW = `สมัครง่ายๆ 3 ขั้นตอนค่ะ
+1️⃣ เลือกคอร์สจากการ์ดด้านบน แล้วโอนตามราคา
+ธ.กสิกรไทย 746-2-43028-5
+ชื่อ ปุญภัช ภูธาราพงษ์
+(สแกน QR ได้ที่หน้าเว็บ)
+2️⃣ ส่งรูปสลิปในแชตนี้
+3️⃣ คอร์สออนไลน์: ระบบส่ง "รหัส VIP" + ลิงก์ห้องเรียน + ลิงก์กลุ่ม OpenChat ให้ทันที ✨
+   Private: แอดมินนัดวันเริ่มเรียนกับโค้ชสุขาในแชตนี้
+
+ดูรายละเอียดทั้งหมด 👉 ${SITE}`;
+
+async function sendGreeting(ev, env) {
+  const name = await displayName(ev.source?.userId || "", env);
+  const hello = `สวัสดีค่ะ${name ? " คุณ" + name : ""} 🙏\nขอบคุณที่แอดไลน์ สุขาสอนเทรด นะคะ\nสุขาสอนเทรดทองคำ (XAUUSD) แบบเป็นระบบ ตั้งแต่อ่านกราฟ วางแผน ไปจนถึงคุมความเสี่ยงค่ะ`;
+  await replyMessages(ev.replyToken, env, [{ type: "text", text: hello }, { type: "text", text: GREET_PAIN }, courseFlex(), { type: "text", text: GREET_HOW }]);
+}
+
 async function handleEvent(ev, env) {
+  if (ev.type === "follow" && ev.replyToken && env.GREETING_BY_BOT !== "off") return sendGreeting(ev, env);
   if (ev.type !== "message" || !ev.replyToken) return;
   const userId = ev.source?.userId || "";
   if (ev.message?.type === "text") {
-    const t = String(ev.message.text || "").replace(/\s+/g, "").toLowerCase();
+    const t = norm(ev.message.text);
     if (RESEND_WORDS.includes(t)) return resendCode(ev, env, userId);
+    if (COURSE_WORDS.includes(t)) return sendCourseCards(ev, env);
+    const pick = PICK_BY_TEXT[t];
+    if (pick) return replyMessages(ev.replyToken, env, [{ type: "text", text: pick.reply }]);
     return;
   }
   if (ev.message?.type !== "image") return;

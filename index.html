@@ -617,6 +617,8 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   function open(k){ last=document.activeElement; set(k||'online'); co.hidden=false; document.body.style.overflow='hidden'; var c=co.querySelector('input:checked'); if(c) c.focus(); }
   function close(){ co.hidden=true; document.body.style.overflow=''; if(last&&last.focus) last.focus(); }
   document.addEventListener('click',function(e){ var a=e.target.closest('[data-buy]'); if(!a) return; e.preventDefault(); open(a.getAttribute('data-buy')); });
+  // ลิงก์จาก LINE: ?buy=online|pv2|pv6 เปิดหน้าชำระเงินของคอร์สนั้นทันที
+  try{ var qb=new URLSearchParams(location.search).get('buy'); if(qb && PK[qb]) setTimeout(function(){ open(qb); },400); }catch(_){}
   co.addEventListener('change',function(e){ if(e.target.name==='pk') set(e.target.value); });
   document.getElementById('coClose').addEventListener('click',close);
   co.addEventListener('click',function(e){ if(e.target===co) close(); });
