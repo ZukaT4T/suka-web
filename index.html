@@ -235,6 +235,13 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
 .cmp .btn{width:100%;font-size:14px;padding:10px 12px}
 .co-travel{font-size:13px;color:var(--ink-2);background:#fffaf0;border-left:3px solid var(--gold);padding:8px 10px;border-radius:8px;margin-top:8px}
 @media (max-width:820px){#private .pv-grid,.tb-grid{grid-template-columns:1fr}}
+.pricecard.imgcard{padding:0;display:block;width:min(340px,100%);overflow:hidden;background:none;border:0}
+.pricecard.imgcard img{display:block;width:100%;height:auto;border-radius:22px}
+.pv-imgs{gap:22px}
+.pv-img{display:block;border-radius:22px;overflow:hidden;box-shadow:var(--shadow-2);transition:transform .2s,box-shadow .2s}
+.pv-img:hover{transform:translateY(-6px);box-shadow:var(--shadow-3)}
+.pv-img.best{box-shadow:0 0 0 2px var(--gold),var(--shadow-3)}
+.pv-img img{display:block;width:100%;height:auto}
 .pv-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
 .pv-note{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-size:15px;border-left:4px solid var(--gold)}
 .pv-note b{font-family:var(--display);font-weight:500;color:var(--navy);display:block;margin-bottom:4px;font-size:16px}
@@ -343,21 +350,9 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   </div>
   <div class="stage">
   <figure class="photo" style="margin:0"><img src="assets/suka.png" alt="โค้ชสุขา" width="520" height="840"><figcaption class="name"><b>โค้ชสุขา</b> · ผู้สอน</figcaption></figure>
-  <aside class="pricecard" aria-label="ราคาคอร์ส">
-    <span class="ribbon">ตลอดชีพ</span>
-    <div class="eyebrow">ONLINE COURSE</div>
-    <div class="pc-name">GOLD TRADING FOUNDATION</div>
-    <div class="big gold-text">1,490 <small>THB</small></div>
-    <ul>
-      <li>48 บทเรียนออนไลน์ เรียนผ่านเว็บไซต์</li>
-      <li>เรียนซ้ำได้ตลอดชีพตามเงื่อนไขบริการ</li>
-      <li>เรียนรู้การอ่านกราฟ Trading Setup และการบริหารความเสี่ยง</li>
-      <li>เน้นจิตวิทยาการเทรดและการฝึกวินัย</li>
-      <li>ดูแลในกลุ่ม LINE OpenChat ตลอดการใช้งาน</li>
-      <li>คู่มือประกอบการเรียน + สมุดบันทึก/เช็คลิสต์ (ไฟล์ PDF)</li>
-    </ul>
-    <img class="chart" src="assets/chart.jpg" alt="ภาพประกอบคอร์สเทรดออนไลน์" width="1000" height="563" loading="lazy">
-  </aside>
+  <a class="pricecard imgcard" href="#pay" data-buy="online" aria-label="สมัครคอร์สออนไลน์ GOLD TRADING FOUNDATION 1,490 บาท">
+    <img src="assets/cards/web-online.jpg" width="720" height="1080" alt="ONLINE COURSE · GOLD TRADING FOUNDATION 1,490 THB: 48 บทเรียนออนไลน์ เรียนผ่านเว็บไซต์ · เรียนซ้ำได้ตลอดชีพ ตามเงื่อนไขบริการ · เรียนรู้การอ่านกราฟ Trading Setup และการบริหารความเสี่ยง · เน้นจิตวิทยาการเทรดและการฝึกวินัย · ดูแลในกลุ่ม LINE OpenChat ตลอดการใช้งาน · คู่มือประกอบการเรียน + สมุดบันทึก/เช็คลิสต์ (ไฟล์ PDF)">
+  </a>
   </div>
 </section>
 
@@ -409,22 +404,9 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <div class="eyebrow">PRIVATE COACHING 1:1</div>
   <h2 style="margin-top:8px">เรียนตัวต่อตัวกับโค้ชสุขาโดยตรง</h2>
   <p class="muted" style="margin-top:8px;max-width:46rem">มี Setup ที่ชัดเจน ฝึกจนเกิดภาพจำ ทำซ้ำตามแผน เน้นการบริหารความเสี่ยงและวินัยในการเทรด โดยมีโค้ชดูแลใกล้ชิดแบบ 1:1</p>
-  <div class="pv-grid">
-    <div class="pv">
-      <div class="pv-dur">FOUNDATION &amp; DISCIPLINE</div>
-      <h3>Private Coaching 1:1 · 2 เดือน</h3>
-      <div class="pv-price">19,999<small>THB</small></div>
-      <ul><li>ดูแลระยะเวลา 2 เดือน</li><li class="meet">พบโค้ชสุขาตัวต่อตัว 1 ครั้ง</li><li class="meet">นัดทบทวนออนไลน์เพิ่มเติมได้ 2 ครั้ง</li><li>เน้นจัดระบบการเทรด ฝึก Setup และสร้างวินัย</li><li class="travel">มาพบโค้ชที่โคราชได้ โดยไม่มีค่าเดินทางเพิ่มเติมที่เรียกเก็บจากโค้ช</li><li class="travel">ให้โค้ชเดินทางไปสอน ณ สถานที่ของผู้เรียน มีค่าเดินทางเพิ่ม 3,000–5,000 บาท/ครั้ง ขึ้นอยู่กับระยะทาง</li></ul>
-      <a class="btn btn-ghost" href="#pay" data-buy="pv2">สมัคร Private 2 เดือน</a>
-    </div>
-    <div class="pv hot">
-      <span class="pv-tag gold">BEST VALUE</span>
-      <div class="pv-dur">MASTERY &amp; CONSISTENCY</div>
-      <h3>Private Coaching 1:1 · 6 เดือน</h3>
-      <div class="pv-price">39,999<small>THB</small></div>
-      <ul><li>ดูแลระยะเวลา 6 เดือน</li><li class="meet">พบโค้ชสุขาตัวต่อตัว 3 ครั้ง</li><li class="meet">นัดทบทวนออนไลน์เพิ่มเติมได้ 6 ครั้ง</li><li>เน้นฝึก Setup อย่างต่อเนื่อง ทบทวน Trading Journal และพัฒนาวินัย</li><li class="travel">มาพบโค้ชที่โคราชได้ โดยไม่มีค่าเดินทางเพิ่มเติมที่เรียกเก็บจากโค้ช</li><li class="travel">ให้โค้ชเดินทางไปสอน ณ สถานที่ของผู้เรียน มีค่าเดินทางเพิ่ม 3,000–5,000 บาท/ครั้ง ขึ้นอยู่กับระยะทาง</li></ul>
-      <a class="btn btn-gold" href="#pay" data-buy="pv6">สมัคร Private 6 เดือน</a>
-    </div>
+  <div class="pv-grid pv-imgs">
+    <a class="pv-img" href="#pay" data-buy="pv2" aria-label="สมัคร Private Coaching 2 เดือน 19,999 บาท"><img src="assets/cards/web-pv2.jpg" width="720" height="1080" loading="lazy" alt="FOUNDATION & DISCIPLINE · Private Coaching 1:1 · 2 เดือน 19,999 THB: ดูแลระยะเวลา 2 เดือน · พบโค้ชสุขาตัวต่อตัว 1 ครั้ง · นัดทบทวนออนไลน์เพิ่มเติมได้ 2 ครั้ง · เน้นจัดระบบการเทรด ฝึก Setup และสร้างวินัย · มาพบโค้ชที่โคราชได้ โดยไม่มีค่าเดินทางเพิ่มเติมที่เรียกเก็บจากโค้ช · ให้โค้ชเดินทางไปสอน ณ สถานที่ของผู้เรียน มีค่าเดินทางเพิ่ม 3,000–5,000 บาท/ครั้ง ขึ้นอยู่กับระยะทาง"></a>
+    <a class="pv-img best" href="#pay" data-buy="pv6" aria-label="สมัคร Private Coaching 6 เดือน 39,999 บาท"><img src="assets/cards/web-pv6.jpg" width="720" height="1080" loading="lazy" alt="BEST VALUE · MASTERY & CONSISTENCY · Private Coaching 1:1 · 6 เดือน 39,999 THB: ดูแลระยะเวลา 6 เดือน · พบโค้ชสุขาตัวต่อตัว 3 ครั้ง · นัดทบทวนออนไลน์เพิ่มเติมได้ 6 ครั้ง · เน้นฝึก Setup อย่างต่อเนื่อง ทบทวน Trading Journal และพัฒนาวินัย · มาพบโค้ชที่โคราชได้ โดยไม่มีค่าเดินทางเพิ่มเติมที่เรียกเก็บจากโค้ช · ให้โค้ชเดินทางไปสอน ณ สถานที่ของผู้เรียน มีค่าเดินทางเพิ่ม 3,000–5,000 บาท/ครั้ง ขึ้นอยู่กับระยะทาง"></a>
   </div>
 
   <div class="travel-box" id="travel">
