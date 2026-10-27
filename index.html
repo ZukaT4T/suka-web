@@ -205,6 +205,36 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
 .pv li::before{content:"✓";flex:0 0 20px;height:20px;border-radius:50%;background:var(--gold-grad);color:#2b1f06;font-size:12px;font-weight:700;display:grid;place-items:center;margin-top:3px}
 .pv li.meet{font-family:var(--display);font-weight:500}
 .pv .btn{margin-top:auto;width:100%}
+.tagline{font-family:var(--display);font-weight:500;color:var(--navy);font-size:17px;margin-top:14px;border-left:3px solid var(--gold);padding-left:12px;max-width:34rem}
+.pricecard .pc-name{font-family:var(--display);font-weight:600;letter-spacing:.06em;color:var(--navy);font-size:15px;margin-top:4px}
+.pv-grid.two,#private .pv-grid{grid-template-columns:repeat(2,1fr);max-width:900px}
+.pv li.travel{font-size:14px;color:var(--ink-2)}
+.pv.hot li.travel{color:#dbe3f5}
+.pv li.travel::before{content:"•";background:none;color:var(--gold);font-size:18px}
+.travel-box{margin-top:26px;max-width:900px;background:var(--white);border:1.5px solid var(--gold);border-radius:20px;padding:22px 24px;box-shadow:var(--shadow-1)}
+.travel-box h3{color:var(--navy)}
+.tb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.tb-item{background:var(--cream);border-radius:14px;padding:14px 16px;font-size:15px}
+.tb-item b{font-family:var(--display);font-weight:500;color:var(--navy);display:block;margin-bottom:6px;font-size:16px}
+.tb-item p+p{margin-top:6px}
+.tb-item b.nb{display:inline;margin:0;font-size:15px;color:var(--gold-deep)}
+.tb-key{margin-top:14px;font-size:14.5px}
+.tb-key b{font-family:var(--display);font-weight:500;color:var(--navy)}
+.tb-key ul{margin:6px 0 0;padding-left:20px;display:grid;gap:4px;color:var(--ink-2)}
+.cmp-wrap{overflow-x:auto;margin-top:14px;max-width:900px}
+.cmp{width:100%;min-width:520px;border-collapse:separate;border-spacing:0;background:var(--white);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-1);font-size:15px}
+.cmp th,.cmp td{padding:12px 16px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp thead th{border-top:0;background:var(--navy-grad);color:#fff;font-family:var(--display);font-weight:500;font-size:16px}
+.cmp thead th.best{background:linear-gradient(180deg,#13306f,#0b1d4a);box-shadow:inset 0 0 0 2px var(--gold)}
+.cmp thead th.best span{display:inline-block;margin-left:6px;background:var(--gold-grad);color:#2b1f06;font-size:11px;padding:2px 8px;border-radius:999px;vertical-align:2px}
+.cmp tbody th,.cmp tfoot th{font-family:var(--display);font-weight:500;color:var(--navy);width:24%;background:var(--cream)}
+.cmp td.best{background:#fffaf0;border-left:2px solid var(--gold);border-right:2px solid var(--gold)}
+.cmp tfoot td.best{border-bottom:2px solid var(--gold)}
+.cmp td.span{color:var(--ink-2);font-size:14px}
+.cmp td b{font-family:var(--display);font-size:18px;color:var(--navy)}
+.cmp .btn{width:100%;font-size:14px;padding:10px 12px}
+.co-travel{font-size:13px;color:var(--ink-2);background:#fffaf0;border-left:3px solid var(--gold);padding:8px 10px;border-radius:8px;margin-top:8px}
+@media (max-width:820px){#private .pv-grid,.tb-grid{grid-template-columns:1fr}}
 .pv-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
 .pv-note{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-size:15px;border-left:4px solid var(--gold)}
 .pv-note b{font-family:var(--display);font-weight:500;color:var(--navy);display:block;margin-bottom:4px;font-size:16px}
@@ -303,6 +333,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <div>
     <div class="eyebrow">คอร์สออนไลน์ · ระบบเทรดทองคำ XAUUSD</div>
     <h1 style="margin-top:12px">ดูกราฟทองเองเป็น<br>ตามระบบของ<span class="gold-text">โค้ชสุขา</span></h1>
+    <p class="tagline">มี Setup ที่ชัดเจน ฝึกจนเกิดภาพจำ ทำซ้ำตามแผน เน้นการบริหารความเสี่ยงและวินัยในการเทรด</p>
     <p class="lead muted">48 บทเรียนสั้น 8–15 นาที เรียงตามลำดับการทำงานจริงของระบบ ตั้งแต่ยังไม่เคยเปิดกราฟ จนวางแผนเทรดได้เองทุกเช้า เรียนย้อนหลังได้ตลอดชีพ</p>
     <div class="cta">
       <a class="btn btn-gold" href="#pay" data-buy="online">สมัครเรียน 1,490 บาท</a>
@@ -314,15 +345,15 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <figure class="photo" style="margin:0"><img src="assets/suka.png" alt="โค้ชสุขา" width="520" height="840"><figcaption class="name"><b>โค้ชสุขา</b> · ผู้สอน</figcaption></figure>
   <aside class="pricecard" aria-label="ราคาคอร์ส">
     <span class="ribbon">ตลอดชีพ</span>
-    <div class="eyebrow">สมัครวันนี้ ราคาพิเศษ</div>
-    <div class="was">จากมูลค่ารวม <s>15,992 บาท</s> <a href="#value" class="why">ดูที่มา</a></div>
-    <div class="big gold-text">1,490 <small>บาท</small></div>
-    <div class="save">ประหยัด 14,502 บาท</div>
+    <div class="eyebrow">ONLINE COURSE</div>
+    <div class="pc-name">GOLD TRADING FOUNDATION</div>
+    <div class="big gold-text">1,490 <small>THB</small></div>
     <ul>
-      <li>คลิปบทเรียน 48 EP รวมราว 8–10 ชั่วโมง</li>
-      <li>เข้าดูได้ตลอดชีพ ไม่มีวันหมดอายุ</li>
-      <li>เรียนได้ทุกเครื่อง ทั้งมือถือและคอมพิวเตอร์</li>
-      <li>ดูแลในกลุ่ม LINE OpenChat ตลอดการใช้งาน คุยกับโค้ชโดยตรง และเพื่อนเทรดเดอร์ทุกคน</li>
+      <li>48 บทเรียนออนไลน์ เรียนผ่านเว็บไซต์</li>
+      <li>เรียนซ้ำได้ตลอดชีพตามเงื่อนไขบริการ</li>
+      <li>เรียนรู้การอ่านกราฟ Trading Setup และการบริหารความเสี่ยง</li>
+      <li>เน้นจิตวิทยาการเทรดและการฝึกวินัย</li>
+      <li>ดูแลในกลุ่ม LINE OpenChat ตลอดการใช้งาน</li>
       <li>คู่มือประกอบการเรียน + สมุดบันทึก/เช็คลิสต์ (ไฟล์ PDF)</li>
     </ul>
     <img class="chart" src="assets/chart.jpg" alt="ภาพประกอบคอร์สเทรดออนไลน์" width="1000" height="563" loading="lazy">
@@ -330,26 +361,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   </div>
 </section>
 
-<section id="value" class="value-sec">
-  <div class="eyebrow">ที่มาของมูลค่า</div>
-  <h2 style="margin-top:8px">มูลค่ารวม 15,992 บาท สมัครวันนี้จ่ายเพียง 1,490 บาท</h2>
-  <div class="vt-wrap">
-    <table class="vt">
-      <thead><tr><th>สิ่งที่ได้รับ</th><th>ราคาปกติ</th></tr></thead>
-      <tbody>
-        <tr><td><b>คอร์สสอน 48 บท + ดูแลในกลุ่มพูดคุย</b><span>คิดจากค่าดูแลปกติ 2 เดือน ครั้งละ 1,999 บาท × 6 ครั้ง (1 ปี)</span></td><td>11,994</td></tr>
-        <tr><td><b>คู่มือประกอบการเรียน</b><span>ไฟล์ PDF ดาวน์โหลดในห้องเรียน</span></td><td>2,999</td></tr>
-        <tr><td><b>สมุดบันทึก + สมุดจดเช็คลิสต์</b><span>ไฟล์ PDF ดาวน์โหลดในห้องเรียน</span></td><td>999</td></tr>
-      </tbody>
-      <tfoot>
-        <tr class="sum"><td>มูลค่ารวม</td><td><s>15,992</s></td></tr>
-        <tr class="vt-pay"><td>สมัครวันนี้ จ่ายเพียง</td><td>1,490</td></tr>
-      </tfoot>
-    </table>
-  </div>
-  <p class="muted" style="margin-top:12px;font-size:14px">คลิปบทเรียนเข้าดูได้ตลอดชีพ · การดูแลในกลุ่ม OpenChat ตลอดการใช้งาน</p>
-  <div style="margin-top:20px"><a class="btn btn-gold" href="#pay" data-buy="online">สมัครเรียน 1,490 บาท</a></div>
-</section>
+<!-- value section removed: no discount anchoring without real sale-price evidence -->
 
 <section id="level">
   <div class="eyebrow">เริ่มที่นี่</div>
@@ -394,45 +406,60 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
 </section>
 
 <section id="private">
-  <div class="eyebrow">คอร์สไพรเวท</div>
+  <div class="eyebrow">PRIVATE COACHING 1:1</div>
   <h2 style="margin-top:8px">เรียนตัวต่อตัวกับโค้ชสุขาโดยตรง</h2>
-  <p class="muted" style="margin-top:8px;max-width:44rem">สำหรับคนที่อยากให้โค้ชดูแลใกล้ชิดแบบ 1:1 ปรับแผนให้ตรงสไตล์การเทรดของตัวเอง</p>
+  <p class="muted" style="margin-top:8px;max-width:46rem">มี Setup ที่ชัดเจน ฝึกจนเกิดภาพจำ ทำซ้ำตามแผน เน้นการบริหารความเสี่ยงและวินัยในการเทรด โดยมีโค้ชดูแลใกล้ชิดแบบ 1:1</p>
   <div class="pv-grid">
     <div class="pv">
-      <div class="pv-dur">ดูแล 2 เดือน</div>
-      <h3>Private Coaching 2 เดือน</h3>
-      <div class="pv-price">19,999<small>บาท</small></div>
-      <div class="pv-avg">เฉลี่ย ~10,000 บาท/เดือน</div>
-      <p class="pv-quote">ดูแลใกล้ชิดแบบ 1:1 ปรับแผนให้ตรงสไตล์คุณ</p>
-      <ul><li>วิเคราะห์แผนเทรดรายวัน</li><li>ปรับพฤติกรรมการเข้าออเดอร์</li><li>ตอบคำถามแบบใกล้ชิด</li><li class="meet">พบกัน 1 ครั้ง</li></ul>
-      <a class="btn btn-ghost" href="#pay" data-buy="pv2">เลือกแพ็กเกจนี้</a>
+      <div class="pv-dur">FOUNDATION &amp; DISCIPLINE</div>
+      <h3>Private Coaching 1:1 · 2 เดือน</h3>
+      <div class="pv-price">19,999<small>THB</small></div>
+      <ul><li>ดูแลระยะเวลา 2 เดือน</li><li class="meet">พบโค้ชสุขาตัวต่อตัว 1 ครั้ง</li><li class="meet">นัดทบทวนออนไลน์เพิ่มเติมได้ 2 ครั้ง</li><li>เน้นจัดระบบการเทรด ฝึก Setup และสร้างวินัย</li><li class="travel">มาพบโค้ชที่โคราชได้ โดยไม่มีค่าเดินทางเพิ่มเติมที่เรียกเก็บจากโค้ช</li><li class="travel">ให้โค้ชเดินทางไปสอน ณ สถานที่ของผู้เรียน มีค่าเดินทางเพิ่ม 3,000–5,000 บาท/ครั้ง ขึ้นอยู่กับระยะทาง</li></ul>
+      <a class="btn btn-ghost" href="#pay" data-buy="pv2">สมัคร Private 2 เดือน</a>
     </div>
     <div class="pv hot">
-      <span class="pv-tag">แนะนำ</span>
-      <div class="pv-dur">ดูแล 6 เดือน</div>
-      <h3>Private Coaching 6 เดือน</h3>
-      <div class="pv-price">39,999<small>บาท</small></div>
-      <div class="pv-avg">เฉลี่ย ~6,666 บาท/เดือน</div>
-      <p class="pv-quote">ดูแลใกล้ชิดแบบ 1:1 ปรับแผนให้ตรงสไตล์คุณ</p>
-      <ul><li>วิเคราะห์แผนเทรดรายวัน</li><li>ปรับพฤติกรรมการเข้าออเดอร์</li><li>ตอบคำถามแบบใกล้ชิด</li><li class="meet">พบกัน 3 ครั้ง</li></ul>
-      <a class="btn btn-gold" href="#pay" data-buy="pv6">เลือกแพ็กเกจนี้</a>
-    </div>
-    <div class="pv">
-      <span class="pv-tag gold">Elite Program</span>
-      <div class="pv-dur">ดูแล 1 ปี</div>
-      <h3>Private Coaching 12 เดือน</h3>
-      <div class="pv-price">79,999<small>บาท</small></div>
-      <div class="pv-avg">เฉลี่ย ~6,666 บาท/เดือน</div>
-      <p class="pv-quote">สำหรับคนที่จริงจังกับผลลัพธ์ระดับมืออาชีพ</p>
-      <ul><li>วิเคราะห์แผนเทรดรายวัน</li><li>ปรับพฤติกรรมการเข้าออเดอร์</li><li>ตอบคำถามแบบใกล้ชิด</li><li class="meet">พบกัน 6 ครั้ง</li></ul>
-      <a class="btn btn-ghost" href="#pay" data-buy="pv12">เลือกแพ็กเกจนี้</a>
+      <span class="pv-tag gold">BEST VALUE</span>
+      <div class="pv-dur">MASTERY &amp; CONSISTENCY</div>
+      <h3>Private Coaching 1:1 · 6 เดือน</h3>
+      <div class="pv-price">39,999<small>THB</small></div>
+      <ul><li>ดูแลระยะเวลา 6 เดือน</li><li class="meet">พบโค้ชสุขาตัวต่อตัว 3 ครั้ง</li><li class="meet">นัดทบทวนออนไลน์เพิ่มเติมได้ 6 ครั้ง</li><li>เน้นฝึก Setup อย่างต่อเนื่อง ทบทวน Trading Journal และพัฒนาวินัย</li><li class="travel">มาพบโค้ชที่โคราชได้ โดยไม่มีค่าเดินทางเพิ่มเติมที่เรียกเก็บจากโค้ช</li><li class="travel">ให้โค้ชเดินทางไปสอน ณ สถานที่ของผู้เรียน มีค่าเดินทางเพิ่ม 3,000–5,000 บาท/ครั้ง ขึ้นอยู่กับระยะทาง</li></ul>
+      <a class="btn btn-gold" href="#pay" data-buy="pv6">สมัคร Private 6 เดือน</a>
     </div>
   </div>
-  <div class="pv-notes">
-    <div class="pv-note"><b>ชวนเพื่อนมาหารได้</b>แชร์ค่าเรียนไพรเวทได้สูงสุด 3 คน เฉลี่ยเริ่มต้นเพียง ~6,xxx บาท/คน</div>
-    <div class="pv-note"><b>มาเจอโค้ชที่โคราช</b>ไม่มีค่าใช้จ่ายเพิ่ม</div>
-    <div class="pv-note"><b>ให้โค้ชไปหา</b>มีค่าเดินทาง 3,000 – 5,000 บาท/ครั้ง</div>
+
+  <div class="travel-box" id="travel">
+    <h3>เงื่อนไขสถานที่เรียนและค่าเดินทาง</h3>
+    <div class="tb-grid">
+      <div class="tb-item"><b>📍 เรียนที่โคราช — ไม่มีค่าเดินทางเพิ่มเติม</b><p>ผู้เรียนสามารถนัดหมายเพื่อเดินทางมาพบโค้ชสุขาที่จังหวัดนครราชสีมา โดยไม่มีค่าเดินทางเพิ่มเติมที่เรียกเก็บจากโค้ช</p></div>
+      <div class="tb-item"><b>🚗 ให้โค้ชเดินทางไปหา — มีค่าเดินทางเพิ่มเติม</b><p>กรณีผู้เรียนต้องการให้โค้ชสุขาเดินทางไปสอน ณ สถานที่ของผู้เรียน มีค่าเดินทางเพิ่มเติม <b class="nb">3,000–5,000 บาทต่อครั้ง</b> ขึ้นอยู่กับระยะทาง</p><p>จะมีการแจ้งค่าเดินทางและตกลงร่วมกันก่อนยืนยันนัดหมายทุกครั้ง</p></div>
+    </div>
+    <div class="tb-key"><b>ข้อสำคัญ</b>
+      <ul>
+        <li>ค่าเดินทางคิดเป็นรายครั้ง ไม่ใช่เหมาจ่ายตลอดคอร์ส</li>
+        <li>หากแพ็กเกจ 6 เดือนมีการเดินทางไปหาผู้เรียน 3 ครั้ง จะคิดค่าเดินทางแยกตามการเดินทางแต่ละครั้ง</li>
+        <li>ไม่เรียกเก็บค่าเดินทางของโค้ชเมื่อผู้เรียนเดินทางมาพบที่โคราช</li>
+        <li>ค่าเดินทางของผู้เรียนเองไม่รวมอยู่ในค่าเรียน</li>
+        <li>ยอดชำระตอนสมัครเป็นค่าเรียนเท่านั้น ค่าเดินทาง (ถ้ามี) ชำระแยกหลังตกลงสถานที่และยืนยันค่าใช้จ่ายแล้ว</li>
+      </ul>
+    </div>
   </div>
+
+  <h3 style="margin-top:34px">เปรียบเทียบแพ็กเกจ Private</h3>
+  <div class="cmp-wrap">
+    <table class="cmp">
+      <thead><tr><th></th><th>2 เดือน</th><th class="best">6 เดือน <span>BEST VALUE</span></th></tr></thead>
+      <tbody>
+        <tr><th>ราคา</th><td><b>19,999 THB</b></td><td class="best"><b>39,999 THB</b></td></tr>
+        <tr><th>ระยะเวลาดูแล</th><td>2 เดือน</td><td class="best">6 เดือน</td></tr>
+        <tr><th>พบตัวต่อตัว</th><td>1 ครั้ง</td><td class="best">3 ครั้ง</td></tr>
+        <tr><th>ทบทวนออนไลน์</th><td>2 ครั้ง</td><td class="best">6 ครั้ง</td></tr>
+        <tr><th>จุดเน้นการฝึก</th><td>จัดระบบการเทรด ฝึก Setup และสร้างวินัย</td><td class="best">ฝึก Setup อย่างต่อเนื่อง ทบทวน Trading Journal และพัฒนาวินัย</td></tr>
+        <tr><th>ค่าเดินทาง</th><td colspan="2" class="span">มาเรียนที่โคราช: ไม่มีค่าเดินทางเพิ่มเติม · ให้โค้ชไปหา: 3,000–5,000 บาท/ครั้ง (ตกลงก่อนยืนยันนัด)</td></tr>
+      </tbody>
+      <tfoot><tr><th></th><td><a class="btn btn-ghost" href="#pay" data-buy="pv2">สมัคร Private 2 เดือน</a></td><td class="best"><a class="btn btn-gold" href="#pay" data-buy="pv6">สมัคร Private 6 เดือน</a></td></tr></tfoot>
+    </table>
+  </div>
+  <p class="muted" style="margin-top:14px;font-size:14px">ชวนเพื่อนมาเรียนไพรเวทด้วยกันได้สูงสุด 3 คน ทักสอบถามรายละเอียดทาง LINE @zuka</p>
 </section>
 
 <section id="how">
@@ -463,7 +490,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
         <div><b>2</b>โอนตามราคาคอร์สที่เลือก</div>
         <div><b>3</b>ส่งสลิปทาง LINE @zuka</div>
       </div>
-      <p class="pay-prices">คอร์สออนไลน์ <b>1,490</b> · ไพรเวท 2 เดือน <b>19,999</b> · 6 เดือน <b>39,999</b> · 12 เดือน <b>79,999</b> บาท</p>
+      <p class="pay-prices">คอร์สออนไลน์ <b>1,490</b> · Private 2 เดือน <b>19,999</b> · Private 6 เดือน <b>39,999</b> บาท <span class="muted">(ค่าเดินทางกรณีให้โค้ชไปหา ชำระแยกหลังตกลงนัด)</span></p>
       <div style="margin-top:18px"><a class="btn btn-gold" href="https://line.me/R/oaMessage/@925ixdwa/?%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B8%AA%E0%B8%A5%E0%B8%B4%E0%B8%9B%E0%B8%84%E0%B9%88%E0%B8%B2%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%99" target="_blank" rel="noopener"><span class="line-ico">L</span>ส่งสลิปทาง LINE</a> <span class="muted" style="font-size:14px;margin-left:8px">ตอบกลับภายใน 5 นาที · รับจำนวนจำกัด</span></div>
     </div>
   </div>
@@ -502,10 +529,15 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <h2 style="margin-top:8px">ก่อนตัดสินใจ</h2>
   <div class="faq">
     <details><summary>ไม่เคยเทรดเลย เรียนได้ไหม</summary><p>ได้ ภาค 0 ทั้ง 10 บท สร้างมาสำหรับคนที่ยังไม่เคยเปิดกราฟ เริ่มจากศัพท์ 7 คำ เปิดบัญชีทดลอง และอ่านแท่งเทียน</p></details>
-    <details><summary>"ตลอดชีพ" หมายถึงอะไร</summary><p>เข้าดูคลิปทั้ง 48 บทได้ไม่จำกัดครั้งและไม่มีวันหมดอายุ และอยู่ในกลุ่ม OpenChat ถาม-ตอบกับโค้ชได้ตลอดการใช้งาน</p></details>
+    <details><summary>"ตลอดชีพ" หมายถึงอะไร</summary><p>เรียนซ้ำคลิปทั้ง 48 บทได้ตลอดชีพตามเงื่อนไขบริการ และอยู่ในกลุ่ม OpenChat ถาม-ตอบกับโค้ชได้ตลอดการใช้งาน</p></details>
     <details><summary>เรียนบนมือถือได้ไหม</summary><p>ได้ ห้องเรียนเปิดได้ทั้งมือถือและคอมพิวเตอร์ ความคืบหน้าบันทึกไว้ตามบัญชีของคุณ</p></details>
     <details><summary>ต้องใช้โบรกเกอร์ไหน</summary><p>ระบบใช้ได้กับกราฟ XAUUSD ทุกโบรกเกอร์ ในคอร์สมีคู่มือเปิดบัญชีทดลองและบัญชีจริงให้ แต่ไม่บังคับ</p></details>
-    <details><summary>คอร์สไพรเวทเรียนที่ไหน</summary><p>มาเจอโค้ชที่โคราชไม่มีค่าใช้จ่ายเพิ่ม ถ้าให้โค้ชไปหามีค่าเดินทาง 3,000 – 5,000 บาท/ครั้ง และชวนเพื่อนมาหารค่าเรียนได้สูงสุด 3 คน</p></details>
+    <details><summary>Private 2 เดือนและ 6 เดือนแตกต่างกันอย่างไร?</summary><p>2 เดือน (19,999 THB) เน้นจัดระบบการเทรด ฝึก Setup และสร้างวินัย ส่วน 6 เดือน (39,999 THB) เน้นฝึก Setup อย่างต่อเนื่อง ทบทวน Trading Journal และพัฒนาวินัย ระยะเวลาดูแลนานกว่าและมีจำนวนครั้งที่พบโค้ชมากกว่า</p></details>
+    <details><summary>จำนวนครั้งที่พบโค้ชและทบทวนออนไลน์มีเท่าไร?</summary><p>Private 2 เดือน: พบโค้ชสุขาตัวต่อตัว 1 ครั้ง และนัดทบทวนออนไลน์เพิ่มเติมได้ 2 ครั้ง · Private 6 เดือน: พบตัวต่อตัว 3 ครั้ง และนัดทบทวนออนไลน์เพิ่มเติมได้ 6 ครั้ง</p></details>
+    <details><summary>ถ้ามาเรียนที่โคราชต้องเสียค่าเดินทางหรือไม่?</summary><p>ไม่มีค่าเดินทางเพิ่มเติมที่เรียกเก็บจากโค้ช เมื่อผู้เรียนนัดหมายเดินทางมาพบโค้ชสุขาที่จังหวัดนครราชสีมา (ค่าเดินทางของผู้เรียนเองไม่รวมอยู่ในค่าเรียน)</p></details>
+    <details><summary>ถ้าให้โค้ชเดินทางไปหาคิดค่าใช้จ่ายอย่างไร?</summary><p>มีค่าเดินทางเพิ่มเติม 3,000–5,000 บาทต่อครั้ง ขึ้นอยู่กับระยะทาง จะแจ้งค่าเดินทางและตกลงร่วมกันก่อนยืนยันนัดหมายทุกครั้ง และไม่รวมในยอดที่ชำระตอนสมัคร</p></details>
+    <details><summary>ค่าเดินทางคิดเป็นรายครั้งหรือเหมาจ่าย?</summary><p>คิดเป็นรายครั้ง ไม่ใช่เหมาจ่ายตลอดคอร์ส เช่น แพ็กเกจ 6 เดือนที่ให้โค้ชเดินทางไปหา 3 ครั้ง จะคิดค่าเดินทางแยกตามการเดินทางแต่ละครั้ง</p></details>
+    <details><summary>นัดเรียนและเลื่อนนัดได้อย่างไร?</summary><p>นัดวันและเวลาเรียนกับโค้ชได้ทาง LINE @zuka และเลื่อนนัดได้ โดยต้องแจ้งล่วงหน้า 2–3 วัน หากไม่มาตามนัด หรือนัดเรียนไม่ครบภายในระยะเวลาดูแลของแพ็กเกจจนจบคอร์ส ถือว่าสละสิทธิ์ครั้งที่เหลือ</p></details>
     <details><summary>ขอคืนเงินได้ไหม</summary><p>เนื่องจากเป็นเนื้อหาดิจิทัลที่เข้าถึงได้ทันที จึงไม่มีการคืนเงินหลังเปิดใช้รหัส VIP แนะนำให้ดูรายการบทเรียนและทักถามในแชตให้แน่ใจก่อนโอน</p></details>
   </div>
 </section>
@@ -514,7 +546,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   <div class="final">
     <div>
       <div class="eyebrow">เริ่มวันนี้</div>
-      <h2 style="margin-top:8px">จากมูลค่ารวม <s style="opacity:.7;font-weight:500">15,992</s> สมัครวันนี้เพียง <span class="gold-text">1,490 บาท</span></h2><p style="margin-top:8px;color:#dbe3f5">คลิปเรียนได้ตลอดชีพ · ดูแลในกลุ่ม OpenChat ตลอดการใช้งาน · คู่มือ + สมุดเช็คลิสต์ PDF</p>
+      <h2 style="margin-top:8px">GOLD TRADING FOUNDATION <span class="gold-text">1,490 THB</span></h2><p style="margin-top:8px;color:#dbe3f5">มี Setup ที่ชัดเจน ฝึกจนเกิดภาพจำ ทำซ้ำตามแผน เน้นการบริหารความเสี่ยงและวินัยในการเทรด</p>
     </div>
     <a class="btn btn-gold" href="#pay" data-buy="online">สมัครเรียน 1,490 บาท</a>
   </div>
@@ -536,12 +568,13 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
     </div>
     <div class="co-body">
       <div class="co-pk" id="coPk">
-        <label><input type="radio" name="pk" value="online"><span class="nm">คอร์สออนไลน์ 48 บท<small>จาก <s>15,992</s> · ตลอดชีพ · ดูแลในกลุ่ม · คู่มือ PDF</small></span><span class="pr">1,490</span></label>
-        <label><input type="radio" name="pk" value="pv2"><span class="nm">ไพรเวท 2 เดือน<small>1:1 · พบกัน 1 ครั้ง</small></span><span class="pr">19,999</span></label>
-        <label><input type="radio" name="pk" value="pv6"><span class="nm">ไพรเวท 6 เดือน<small>1:1 · พบกัน 3 ครั้ง · แนะนำ</small></span><span class="pr">39,999</span></label>
-        <label><input type="radio" name="pk" value="pv12"><span class="nm">ไพรเวท 12 เดือน<small>1:1 · พบกัน 6 ครั้ง · Elite</small></span><span class="pr">79,999</span></label>
+        <label><input type="radio" name="pk" value="online"><span class="nm">คอร์สออนไลน์ 48 บท<small>48 บทเรียน · เรียนซ้ำได้ตลอดชีพ · ดูแลในกลุ่ม · คู่มือ PDF</small></span><span class="pr">1,490</span></label>
+        <label><input type="radio" name="pk" value="pv2"><span class="nm">Private 2 เดือน<small>1:1 · พบตัวต่อตัว 1 ครั้ง · ทบทวนออนไลน์ 2 ครั้ง</small></span><span class="pr">19,999</span></label>
+        <label><input type="radio" name="pk" value="pv6"><span class="nm">Private 6 เดือน<small>1:1 · พบตัวต่อตัว 3 ครั้ง · ทบทวนออนไลน์ 6 ครั้ง · BEST VALUE</small></span><span class="pr">39,999</span></label>
+        
       </div>
       <div class="co-amt"><span>ยอดที่ต้องโอน</span><b><span id="coAmt">1,490</span> บาท</b></div>
+      <p class="co-travel" id="coTravel" hidden>ยอดนี้เป็นค่าเรียนเท่านั้น · มาเรียนที่โคราชไม่มีค่าเดินทางเพิ่มเติม · ถ้าให้โค้ชไปหา มีค่าเดินทาง 3,000–5,000 บาท/ครั้ง แจ้งและตกลงกันก่อนยืนยันนัด ชำระแยกภายหลัง</p>
       <div class="co-pay">
         <img src="assets/promptpay-qr.jpg" alt="QR พร้อมเพย์ สำหรับชำระค่าเรียน" width="583" height="640">
         <div class="co-acct">
@@ -569,13 +602,14 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
 </script>
 <script>
 (function(){
-  var PK={online:{n:'คอร์สออนไลน์ 48 บท',p:1490},pv2:{n:'Private Coaching 2 เดือน',p:19999},pv6:{n:'Private Coaching 6 เดือน',p:39999},pv12:{n:'Private Coaching 12 เดือน',p:79999}};
+  var PK={online:{n:'คอร์สออนไลน์ 48 บท',p:1490},pv2:{n:'Private Coaching 2 เดือน',p:19999},pv6:{n:'Private Coaching 6 เดือน',p:39999}};
   var co=document.getElementById('checkout'); if(!co) return;
   var last=null;
   function fmt(n){return n.toLocaleString('en-US');}
   function set(k){
     var r=co.querySelector('input[value="'+k+'"]'); if(r) r.checked=true;
     var it=PK[k]; document.getElementById('coAmt').textContent=fmt(it.p); document.getElementById('coAmt2').textContent=fmt(it.p);
+    document.getElementById('coTravel').hidden = (k==='online');
     document.getElementById('coAfter').innerHTML = k==='online' ? 'ทีมงานตรวจสลิปแล้วส่ง <b>รหัส VIP</b> + ลิงก์ห้องเรียนให้ในแชต' : 'ทีมงานตรวจสลิปแล้วนัดวันเริ่มเรียนกับโค้ชสุขาในแชต';
     var msg='ส่งสลิปค่าเรียน\nคอร์ส: '+it.n+'\nยอดโอน: '+fmt(it.p)+' บาท\nชื่อผู้เรียน: ';
     document.getElementById('coLine').href='https://line.me/R/oaMessage/@925ixdwa/?'+encodeURIComponent(msg);

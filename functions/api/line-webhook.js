@@ -11,7 +11,7 @@ const PACKAGES = {
   1490: { key: "online", name: "คอร์สออนไลน์ 48 บท" },
   19999: { key: "pv2", name: "Private Coaching 2 เดือน" },
   39999: { key: "pv6", name: "Private Coaching 6 เดือน" },
-  79999: { key: "pv12", name: "Private Coaching 12 เดือน" },
+  // 79,999 (Private 12 เดือน) ปิดการขายแล้ว 27 ต.ค. 2569 — ถ้ามีคนโอนยอดนี้ บอทจะให้แอดมินตรวจเอง
 };
 // บัญชีรับเงิน: กสิกรไทย (004) ปุญภัช ภูธาราพงษ์ 746-2-43028-5
 const RECEIVER = { bankId: "004", nameTh: "ปุญภัช", nameEn: "PUNYAPHAT", acctDigits: "3028" };
@@ -190,7 +190,7 @@ async function logSlip(env, entry, slip) {
 }
 
 // ชื่อคอร์สต้องตรงกับแท็บ "ราคาคอร์ส" ในชีต
-const SHEET_COURSE = { 1490: "คอร์สออนไลน์", 19999: "คอร์สไพรเวท 2 เดือน", 39999: "คอร์สไพรเวท 6 เดือน", 79999: "คอร์สไพรเวท 12 เดือน" };
+const SHEET_COURSE = { 1490: "คอร์สออนไลน์", 19999: "คอร์สไพรเวท 2 เดือน", 39999: "คอร์สไพรเวท 6 เดือน" };
 const SHEET_RESULT = {
   issued: "ผ่าน · ออกรหัส VIP อัตโนมัติ",
   private_paid: "ผ่าน · ไพรเวท รอนัดเรียน",
