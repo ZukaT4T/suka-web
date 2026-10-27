@@ -15,7 +15,7 @@ const PACKAGES = {
 };
 // บัญชีรับเงิน: กสิกรไทย (004) ปุญภัช ภูธาราพงษ์ 746-2-43028-5
 const RECEIVER = { bankId: "004", nameTh: "ปุญภัช", nameEn: "PUNYAPHAT", acctDigits: "3028" };
-const LEARN_URL = "https://www.สุขาสอนเทรด.com/learn/";
+const LEARN_URL = "https://www.zuka-t4tacademy.com/learn/";
 const OPENCHAT_URL = "https://line.me/ti/g2/thhJkmSQitUosAotVZhCeL2UwBkaMpftkAN8Ww?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
 export async function onRequestPost(context) {
@@ -37,14 +37,15 @@ const RESEND_WORDS = ["ขอรหัส", "ขอรหัสvip", "ขอร�
 const COURSE_WORDS = ["สมัคร", "สนใจ", "ขอรายละเอียด", "ดูคอร์ส", "รายละเอียดคอร์ส", "สมัครเรียน", "ดูคอร์สทั้งหมด"];
 const SITE = "https://www.สุขาสอนเทรด.com";
 const IMG_BASE = "https://www.zuka-t4tacademy.com"; // รูปใน Flex ต้องเป็นโดเมนอังกฤษ
+const PAY_SITE = "https://www.zuka-t4tacademy.com"; // ลิงก์จ่ายเงินใช้โดเมนอังกฤษ แชร์ต่อแล้วไม่เพี้ยน
 // แตะการ์ด = ส่งข้อความนี้เข้าแชท แล้วบอทตอบลิงก์เว็บของคอร์สนั้น
 const PICK = {
   online: { text: "สนใจคอร์สออนไลน์ 1,490 บาท ค่ะ", img: "flex-online.jpg", label: "คอร์สออนไลน์",
-    reply: "คอร์สออนไลน์ GOLD TRADING FOUNDATION 1,490 บาท 🎯\n\nสมัครและดูวิธีชำระเงินได้ที่นี่ค่ะ 👉\n" + SITE + "/?buy=online#pay\n\nโอนแล้วส่งรูปสลิปในแชตนี้ได้เลย ระบบจะส่งรหัส VIP + ลิงก์ห้องเรียนให้ทันทีค่ะ 🙏" },
+    reply: "คอร์สออนไลน์ GOLD TRADING FOUNDATION 1,490 บาท 🎯\n\nสมัครและดูวิธีชำระเงินได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?buy=online#pay\n\nโอนแล้วส่งรูปสลิปในแชตนี้ได้เลย ระบบจะส่งรหัส VIP + ลิงก์ห้องเรียนให้ทันทีค่ะ 🙏" },
   pv2: { text: "สนใจ Private Coaching 2 เดือน (19,999 บาท) ค่ะ", img: "flex-pv2.jpg", label: "Private 2 เดือน",
-    reply: "Private Coaching 1:1 · 2 เดือน 19,999 บาท\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + SITE + "/?buy=pv2#private\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะนัดวันเริ่มเรียนกับโค้ชสุขาให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" },
+    reply: "Private Coaching 1:1 · 2 เดือน 19,999 บาท\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?buy=pv2#private\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะนัดวันเริ่มเรียนกับโค้ชสุขาให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" },
   pv6: { text: "สนใจ Private Coaching 6 เดือน (39,999 บาท) ค่ะ", img: "flex-pv6.jpg", label: "Private 6 เดือน",
-    reply: "Private Coaching 1:1 · 6 เดือน 39,999 บาท (BEST VALUE)\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + SITE + "/?buy=pv6#private\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะนัดวันเริ่มเรียนกับโค้ชสุขาให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" },
+    reply: "Private Coaching 1:1 · 6 เดือน 39,999 บาท (BEST VALUE)\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?buy=pv6#private\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะนัดวันเริ่มเรียนกับโค้ชสุขาให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" },
 };
 const norm = (x) => String(x || "").replace(/\s+/g, "").toLowerCase();
 const PICK_BY_TEXT = Object.fromEntries(Object.values(PICK).map((p) => [norm(p.text), p]));
