@@ -15,7 +15,7 @@ const PACKAGES = {
 };
 // บัญชีรับเงิน: กสิกรไทย (004) ปุญภัช ภูธาราพงษ์ 746-2-43028-5
 const RECEIVER = { bankId: "004", nameTh: "ปุญภัช", nameEn: "PUNYAPHAT", acctDigits: "3028" };
-const LEARN_URL = "https://zuka-t4tacademy.com/learn/";
+const LEARN_URL = "https://www.สุขาสอนเทรด.com/learn/";
 const OPENCHAT_URL = "https://line.me/ti/g2/thhJkmSQitUosAotVZhCeL2UwBkaMpftkAN8Ww?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
 export async function onRequestPost(context) {
@@ -35,7 +35,8 @@ const RESEND_WORDS = ["ขอรหัส", "ขอรหัสvip", "ขอร�
 
 // ลูกค้าพิมพ์ "สมัคร" / "สนใจ" หรือกดปุ่ม "รายละเอียดคอร์ส" ในริชเมนู = ส่งการ์ดคอร์สรูปเต็ม (Flex) + ลิงก์เว็บ
 const COURSE_WORDS = ["สมัคร", "สนใจ", "ขอรายละเอียด", "ดูคอร์ส", "รายละเอียดคอร์ส", "สมัครเรียน", "ดูคอร์สทั้งหมด"];
-const SITE = "https://www.zuka-t4tacademy.com";
+const SITE = "https://www.สุขาสอนเทรด.com";
+const IMG_BASE = "https://www.zuka-t4tacademy.com"; // รูปใน Flex ต้องเป็นโดเมนอังกฤษ
 // แตะการ์ด = ส่งข้อความนี้เข้าแชท แล้วบอทตอบลิงก์เว็บของคอร์สนั้น
 const PICK = {
   online: { text: "สนใจคอร์สออนไลน์ 1,490 บาท ค่ะ", img: "flex-online.jpg", label: "คอร์สออนไลน์",
@@ -57,7 +58,7 @@ function courseFlex() {
       contents: Object.values(PICK).map((p) => ({
         type: "bubble",
         size: "giga",
-        hero: { type: "image", url: SITE + "/assets/cards/" + p.img, size: "full", aspectRatio: "2:3", aspectMode: "cover",
+        hero: { type: "image", url: IMG_BASE + "/assets/cards/" + p.img, size: "full", aspectRatio: "2:3", aspectMode: "cover",
           action: { type: "message", label: p.label, text: p.text } },
       })),
     },
