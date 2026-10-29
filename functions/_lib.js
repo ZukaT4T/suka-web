@@ -46,3 +46,22 @@ function timingSafeEqual(a, b) {
 export async function readJSON(request) {
   try { return await request.json(); } catch { return {}; }
 }
+
+// ผู้มีสิทธิ์อัปโหลดคลิป: แอดมิน หรือรหัสอัปโหลดชั่วคราวที่แอดมินสร้าง (หมดอายุเอง)
+export async function isUploader(request, env) {
+  if (isAdmin(request, env)) return true;
+  const t = request.headers.get("x-upload-ticket") || "";
+  if (!/^[0-9a-f]{48}$/.test(t)) return false;
+  return !!(await env.SUKA_KV.get("upticket:" + t));
+}
+
+// เช็กสิทธิ์นักเรียนจาก token (ใช้กับ <video src> ที่ส่ง header ไม่ได้)
+export async function sessionFromToken(token, env) {
+  if (!/^[0-9a-f]{48}$/.test(token || "")) return null;
+  const raw = await env.SUKA_KV.get("session:" + token);
+  if (!raw) return null;
+  const s = JSON.parse(raw);
+  const c = await env.SUKA_KV.get("code:" + s.code);
+  if (!c || JSON.parse(c).revoked) return null;
+  return s;
+}

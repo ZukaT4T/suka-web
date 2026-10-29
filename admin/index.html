@@ -73,6 +73,13 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06e
   </div>
 
   <div class="card">
+    <div class="row" style="justify-content:space-between"><h2>คลิปในห้องเรียน <span class="muted" id="mediaStat"></span></h2><button class="btn ghost small" id="mediaReload">โหลดใหม่</button></div>
+    <p class="muted">อัปโหลดคลิป/ปก เข้าที่เก็บของเว็บ (เล่นได้เฉพาะนักเรียนที่ login) · เลือกได้ทีละหลายไฟล์ ชื่อไฟล์ต้องขึ้นต้นด้วย EP01, EP02… · .mp4 = คลิป, .jpg/.png = ปก · ถ้าช่องลิงก์ embed ด้านล่างมีลิงก์ของ EP ไหน จะใช้ลิงก์นั้นแทน</p>
+    <div class="row"><input type="file" id="mediaFiles" multiple accept="video/mp4,image/jpeg,image/png"><button class="btn" id="mediaUp">อัปโหลด</button><span class="msg" id="mediaMsg"></span></div>
+    <div class="muted" id="mediaList" style="margin-top:10px;line-height:1.9"></div>
+  </div>
+
+  <div class="card">
     <h2>ลิงก์คลิปบทเรียน + เอกสาร PDF</h2>
     <p class="muted">วางลิงก์ embed จาก Bunny Stream / Vimeo / YouTube ของแต่ละ EP นักเรียนที่ login เท่านั้นที่เห็นลิงก์ · ว่าง = "คลิปกำลังผลิต"</p>
     <div class="tablewrap"><table class="vid" id="videos"><thead><tr><th style="width:70px">EP</th><th class="hide-m" style="width:32%">บท</th><th>ลิงก์ embed (https://...)</th></tr></thead><tbody></tbody></table></div>
@@ -98,7 +105,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06e
     $('keyMsg').textContent='กำลังตรวจสอบ…'; $('keyMsg').className='msg';
     api('/api/admin/codes').then(function(r){
       if(!r.ok){ $('keyMsg').textContent=r.error||'กุญแจไม่ถูกต้อง'; $('keyMsg').className='msg err'; try{sessionStorage.removeItem(KEY)}catch(e){} return; }
-      $('login').hidden=true; $('panel').hidden=false; renderCodes(r.codes); loadVideos(); loadSlips();
+      $('login').hidden=true; $('panel').hidden=false; renderCodes(r.codes); loadVideos(); loadSlips(); loadMedia();
     }).catch(function(){ $('keyMsg').textContent='ติดต่อเซิร์ฟเวอร์ไม่ได้'; $('keyMsg').className='msg err'; });
   }
 
@@ -145,6 +152,27 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06e
   }); }
   $('slipReload').onclick=loadSlips;
 
+
+  // ---- media (R2) ----
+  function loadMedia(){
+    api('/api/admin/media').then(function(r){
+      var m=(r.ok&&r.media)||{}; var nv=0,nc=0;
+      $('mediaList').innerHTML=eps.map(function(e){ var x=m[e.ep]||{}; if(x.video)nv++; if(x.cover)nc++; return '<b>'+e.ep+'</b> '+(x.video?'🎬 '+(x.video/1048576).toFixed(1)+'MB':'<span style="color:#c0392b">ไม่มีคลิป</span>')+(x.cover?' · 🖼':''); }).join(' &nbsp;|&nbsp; ');
+      $('mediaStat').textContent=r.ok?('คลิป '+nv+'/'+eps.length+' · ปก '+nc+'/'+eps.length):(r.error||'');
+    });
+  }
+  $('mediaReload').onclick=loadMedia;
+  $('mediaUp').onclick=function(){
+    var files=[].slice.call($('mediaFiles').files||[]); if(!files.length){ $('mediaMsg').textContent='เลือกไฟล์ก่อน'; return; }
+    var i=0, okN=0, errs=[]; $('mediaUp').disabled=true;
+    (function next(){
+      if(i>=files.length){ $('mediaUp').disabled=false; $('mediaMsg').textContent='อัปโหลดเสร็จ '+okN+'/'+files.length+(errs.length?' · ผิดพลาด: '+errs.join(', '):''); $('mediaMsg').className='msg '+(errs.length?'err':'ok'); loadMedia(); return; }
+      var f=files[i++]; var mm=/^(EP\d{2})/i.exec(f.name); var kind=/^video\//.test(f.type)?'video':(/^image\//.test(f.type)?'cover':'');
+      if(!mm||!kind){ errs.push(f.name); return next(); }
+      $('mediaMsg').textContent='กำลังอัปโหลด '+i+'/'+files.length+' · '+f.name; $('mediaMsg').className='msg';
+      fetch('/api/admin/media?ep='+mm[1].toUpperCase()+'&kind='+kind,{method:'PUT',headers:{'x-admin-key':key,'content-type':f.type},body:f}).then(function(r){return r.json()}).then(function(r){ if(r.ok) okN++; else errs.push(f.name); next(); }).catch(function(){ errs.push(f.name); next(); });
+    })();
+  };
   // ---- videos ----
   var eps=[]; (window.SUKA||{modules:[]}).modules.forEach(function(m){ m.eps.forEach(function(e){ eps.push(e); }); });
   function loadVideos(){
