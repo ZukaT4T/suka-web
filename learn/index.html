@@ -74,7 +74,7 @@ details.mod summary::-webkit-details-marker{display:none}
 
 .main{min-width:0}
 .player{aspect-ratio:16/9;max-width:100%;background:var(--navy-grad);border-radius:18px;box-shadow:var(--shadow-2);overflow:hidden;position:relative;display:grid;place-items:center;color:#c9cfd8}
-.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.player iframe,.player video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;object-fit:contain}
 .player .ph{text-align:center;padding:24px}
 .player .ph b{font-family:var(--display);display:block;font-size:18px;color:#fff}
 .lesson{margin-top:18px}
@@ -154,7 +154,7 @@ details.mod summary::-webkit-details-marker{display:none}
 
   var eps=[]; D.modules.forEach(function(m){ m.eps.forEach(function(e){ e.mod=m; eps.push(e); }); });
   var prog={}; try{ prog=JSON.parse(load(KEY_PROG)||'{}'); }catch(e){}
-  var videos={}; var cur=0; var token=load(KEY_TOKEN)||''; var me=null;
+  var videos={}; var media={}; var cur=0; var token=load(KEY_TOKEN)||''; var me=null;
 
   var gate=document.getElementById('gate'), app=document.getElementById('app'), err=document.getElementById('err');
   var submitBtn=document.querySelector('#gateForm button[type=submit]');
@@ -182,7 +182,7 @@ details.mod summary::-webkit-details-marker{display:none}
   document.getElementById('logout').addEventListener('click', function(){ api('/api/me',{method:'DELETE'}).catch(function(){}).then(function(){ try{localStorage.removeItem(KEY_TOKEN);}catch(e){} location.reload(); }); });
 
   function enter(m){
-    me=m; videos=m.videos||{};
+    me=m; videos=m.videos||{}; media=m.media||{};
     // รวมความคืบหน้า: เซิร์ฟเวอร์ + เครื่องนี้
     var sp=m.progress||{}; Object.keys(sp).forEach(function(k){ if(!prog[k]) prog[k]=sp[k]; }); save(KEY_PROG, JSON.stringify(prog)); syncProgress();
     gate.hidden=true; app.hidden=false;
@@ -195,7 +195,8 @@ details.mod summary::-webkit-details-marker{display:none}
 
   function renderDocs(){ var L=document.getElementById('docList'); if(!L) return; L.innerHTML='';
     [['DOC_MANUAL','คู่มือประกอบการเรียน'],['DOC_NOTEBOOK','สมุดบันทึก + เช็คลิสต์']].forEach(function(d){ var u=videos[d[0]]; var a=document.createElement(u?'a':'span'); a.className='doc'+(u?'':' off'); a.textContent=(u?'⬇ ':'')+d[1]+(u?'':' · เร็วๆ นี้'); if(u){a.href=u;a.target='_blank';a.rel='noopener';} L.appendChild(a); }); }
-  function vid(e){ return videos[e.ep] || e.video || ''; }
+  function vid(e){ return videos[e.ep] || e.video || ((media[e.ep]&&media[e.ep].video)?'r2':''); }
+  function cover(e){ return (media[e.ep]&&media[e.ep].cover)?('/api/c/'+e.ep):''; }
 
   var syncT=null;
   function syncProgress(){ clearTimeout(syncT); syncT=setTimeout(function(){ api('/api/progress',{method:'PUT',body:JSON.stringify({progress:prog})}).catch(function(){}); }, 800); }
@@ -230,7 +231,8 @@ details.mod summary::-webkit-details-marker{display:none}
     document.getElementById('epTitle').textContent=e.ep+' '+e.title;
     document.getElementById('epDesc').textContent=e.desc;
     var p=document.getElementById('player');
-    if(v){ p.innerHTML=''; var f=document.createElement('iframe'); f.src=v; f.allow='autoplay; fullscreen; picture-in-picture; encrypted-media'; f.allowFullscreen=true; f.loading='lazy'; f.title=e.ep; p.appendChild(f); }
+    if(v==='r2'){ p.innerHTML=''; var vd=document.createElement('video'); vd.controls=true; vd.playsInline=true; vd.preload='metadata'; vd.setAttribute('controlsList','nodownload'); vd.disablePictureInPicture=false; vd.oncontextmenu=function(){return false;}; var c=cover(e); if(c) vd.poster=c; vd.src='/api/v/'+e.ep+'?t='+encodeURIComponent(token); vd.title=e.ep; vd.addEventListener('ended', function(){ if(!prog[e.ep]){ mark(e,true); document.getElementById('doneChk').checked=true; } }); p.appendChild(vd); }
+    else if(v){ p.innerHTML=''; var f=document.createElement('iframe'); f.src=v; f.allow='autoplay; fullscreen; picture-in-picture; encrypted-media'; f.allowFullscreen=true; f.loading='lazy'; f.title=e.ep; p.appendChild(f); }
     else { p.innerHTML='<div class="ph"><b>'+e.ep+' กำลังผลิต</b>คลิปบทนี้จะขึ้นที่นี่เมื่อตัดต่อเสร็จ ติดตามประกาศในกลุ่ม LINE</div>'; }
     document.getElementById('doneChk').checked=!!prog[e.ep];
     document.getElementById('nextBtn').disabled = (i>=eps.length-1);
