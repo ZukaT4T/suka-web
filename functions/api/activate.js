@@ -1,5 +1,5 @@
 // POST /api/activate  { name, code }  -> { ok, token, name }
-// รหัส 1 รหัส = นักเรียน 1 คน ใช้ได้หลายเครื่อง (ถ้าชื่อตรงกับครั้งแรก)
+// รหัส 1 รหัส = นักเรียน 1 คน (ชื่อต้องตรงกับครั้งแรก) เข้าได้ทีละ 1 เครื่อง: ล็อกอินเครื่องใหม่ เครื่องเก่าหลุดอัตโนมัติ
 import { json, bad, normCode, randomToken, readJSON } from "../_lib.js";
 
 export async function onRequestPost({ request, env }) {
@@ -27,12 +27,14 @@ export async function onRequestPost({ request, env }) {
   } else {
     const same = rec.usedBy.replace(/\s+/g, "").toLowerCase() === name.replace(/\s+/g, "").toLowerCase();
     if (!same) return bad("รหัสนี้ถูกใช้แล้วโดยชื่ออื่น ถ้าเป็นของคุณ กรอกชื่อให้ตรงกับครั้งแรก หรือทักแชต LINE @zuka");
-    rec.devices = (rec.devices || 1) + 1;
-    if (rec.devices > 5) return bad("รหัสนี้ถูกใช้บนหลายเครื่องเกินกำหนด ทักแชต LINE @zuka");
+    rec.devices = (rec.devices || 1) + 1; // นับจำนวนครั้งที่ล็อกอิน (ไว้ดูในแอดมิน)
   }
+  const token = randomToken();
+  // เตะเครื่องเก่าออก (เก็บเครื่องหมายไว้ 7 วัน ให้เครื่องเก่าขึ้นข้อความว่าถูกล็อกอินจากเครื่องอื่น)
+  if (rec.session) await env.SUKA_KV.put("session:" + rec.session, JSON.stringify({ kicked: true, code }), { expirationTtl: 7 * 86400 });
+  rec.session = token; rec.lastLoginAt = Date.now();
   await env.SUKA_KV.put("code:" + code, JSON.stringify(rec));
 
-  const token = randomToken();
   await env.SUKA_KV.put("session:" + token, JSON.stringify({ code, name: rec.usedBy, at: Date.now() }));
   await env.SUKA_KV.delete(rlKey);
   return json({ ok: true, token, name: rec.usedBy });

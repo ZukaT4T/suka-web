@@ -38,7 +38,7 @@ suka-web/
 
 ## ขั้น 4 · ระบบรหัส VIP (ทำแล้ว ใช้ Cloudflare KV + Pages Functions ในโฟลเดอร์ functions/)
 - หน้าแอดมิน: https://zuka-t4tacademy.com/admin/  ใส่กุญแจ ADMIN_KEY → สร้างรหัส VIP, ยกเลิกรหัส, ใส่ลิงก์คลิปแต่ละ EP
-- นักเรียน: https://zuka-t4tacademy.com/learn/  กรอกชื่อ + รหัส → เข้าได้ทุกเครื่อง (ชื่อต้องตรงกับครั้งแรก สูงสุด 5 เครื่อง) ความคืบหน้าซิงก์ตามรหัส
+- นักเรียน: https://zuka-t4tacademy.com/learn/  กรอกชื่อ + รหัส → เข้าได้ทีละ 1 เครื่อง (ชื่อต้องตรงกับครั้งแรก · ล็อกอินเครื่องใหม่ เครื่องเก่าหลุดอัตโนมัติ) ความคืบหน้าซิงก์ตามรหัส
 - ลิงก์คลิปเก็บใน KV เห็นเฉพาะคน login (ไม่อยู่ใน lessons.js)
 - ตั้งค่าใน Cloudflare Pages → suka-web → Settings: KV binding ชื่อ SUKA_KV และ Environment variable (secret) ADMIN_KEY
 - เปลี่ยนกุญแจแอดมิน: แก้ ADMIN_KEY ใน Settings แล้ว Retry deployment

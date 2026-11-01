@@ -14,7 +14,8 @@ export async function onRequest({ request, env }) {
       const r = await env.SUKA_KV.list({ prefix: "code:", cursor });
       for (const k of r.keys) {
         const rec = await env.SUKA_KV.get(k.name, "json");
-        out.push({ code: k.name.slice(5), ...rec });
+        const { session, ...rest } = rec || {};
+        out.push({ code: k.name.slice(5), ...rest, online: !!session });
       }
       cursor = r.list_complete ? null : r.cursor;
     } while (cursor);

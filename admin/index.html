@@ -116,7 +116,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06e
       if(c.revoked) rev++; else if(c.usedBy) used++;
       var st=c.revoked?'<span class="pill p-rev">ยกเลิก</span>':(c.usedBy?'<span class="pill p-used">ใช้แล้ว</span>':'<span class="pill p-new">ยังไม่ใช้</span>');
       var tr=document.createElement('tr');
-      tr.innerHTML='<td><code>'+c.code+'</code> <button class="btn ghost small" data-copy="'+c.code+'">คัดลอก</button></td><td>'+st+'</td><td>'+(c.usedBy||'')+(c.devices>1?' <span class="muted">('+c.devices+' เครื่อง)</span>':'')+'</td><td class="hide-m">'+(c.note||'')+'</td><td class="hide-m muted">'+fmt(c.createdAt)+'</td><td><button class="btn ghost small" data-rev="'+c.code+'" data-restore="'+(c.revoked?'1':'')+'">'+(c.revoked?'คืนสถานะ':'ยกเลิก')+'</button></td>';
+      tr.innerHTML='<td><code>'+c.code+'</code> <button class="btn ghost small" data-copy="'+c.code+'">คัดลอก</button></td><td>'+st+'</td><td>'+(c.usedBy||'')+(c.devices>1?' <span class="muted">(ล็อกอิน '+c.devices+' ครั้ง)</span>':'')+'</td><td class="hide-m">'+(c.note||'')+'</td><td class="hide-m muted">'+fmt(c.createdAt)+'</td><td><button class="btn ghost small" data-rev="'+c.code+'" data-restore="'+(c.revoked?'1':'')+'">'+(c.revoked?'คืนสถานะ':'ยกเลิก')+'</button></td>';
       tb.appendChild(tr);
     });
     $('stats').textContent='· '+list.length+' รหัส · ใช้แล้ว '+used+' · ยกเลิก '+rev;
