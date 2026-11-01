@@ -30,7 +30,8 @@ export async function onRequestPost({ request, env }) {
     rec.devices = (rec.devices || 1) + 1; // นับจำนวนครั้งที่ล็อกอิน (ไว้ดูในแอดมิน)
   }
   const token = randomToken();
-  if (rec.session) await env.SUKA_KV.delete("session:" + rec.session); // เตะเครื่องเก่าออก
+  // เตะเครื่องเก่าออก (เก็บเครื่องหมายไว้ 7 วัน ให้เครื่องเก่าขึ้นข้อความว่าถูกล็อกอินจากเครื่องอื่น)
+  if (rec.session) await env.SUKA_KV.put("session:" + rec.session, JSON.stringify({ kicked: true, code }), { expirationTtl: 7 * 86400 });
   rec.session = token; rec.lastLoginAt = Date.now();
   await env.SUKA_KV.put("code:" + code, JSON.stringify(rec));
 

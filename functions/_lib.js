@@ -41,8 +41,9 @@ export async function checkActive(s, env) {
   if (!raw) return { ok: false };
   const rec = JSON.parse(raw);
   if (rec.revoked) return { ok: false, revoked: true };
+  if (s.kicked) return { ok: false, kicked: true };
   if (!rec.session) { rec.session = s.token; await env.SUKA_KV.put("code:" + s.code, JSON.stringify(rec)); return { ok: true }; }
-  if (rec.session !== s.token) { await env.SUKA_KV.delete("session:" + s.token); return { ok: false, kicked: true }; }
+  if (rec.session !== s.token) { await env.SUKA_KV.put("session:" + s.token, JSON.stringify({ kicked: true, code: s.code }), { expirationTtl: 7 * 86400 }); return { ok: false, kicked: true }; }
   return { ok: true };
 }
 
