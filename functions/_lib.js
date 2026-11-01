@@ -30,7 +30,32 @@ export async function getSession(request, env) {
   if (!raw) return null;
   const s = JSON.parse(raw);
   s.token = token;
-  return s;
+  const a = await checkActive(s, env);
+  return a.ok ? s : null;
+}
+
+// เข้าระบบได้ทีละเครื่อง: token ต้องเป็นเครื่องล่าสุดที่ล็อกอินด้วยรหัสนี้ (rec.session)
+// รหัสเก่าที่ยังไม่มี rec.session -> เครื่องแรกที่เรียกเข้ามาหลังอัปเดตจะได้สิทธิ์ เครื่องอื่นหลุด
+export async function checkActive(s, env) {
+  const raw = await env.SUKA_KV.get("code:" + s.code);
+  if (!raw) return { ok: false };
+  const rec = JSON.parse(raw);
+  if (rec.revoked) return { ok: false, revoked: true };
+  if (!rec.session) { rec.session = s.token; await env.SUKA_KV.put("code:" + s.code, JSON.stringify(rec)); return { ok: true }; }
+  if (rec.session !== s.token) { await env.SUKA_KV.delete("session:" + s.token); return { ok: false, kicked: true }; }
+  return { ok: true };
+}
+
+// ใช้กับ /api/me เพื่อบอกเหตุผลที่หลุด (ถูกล็อกอินจากเครื่องอื่น)
+export async function sessionStatus(request, env) {
+  const h = request.headers.get("authorization") || "";
+  const token = h.startsWith("Bearer ") ? h.slice(7).trim() : "";
+  if (!token) return { s: null };
+  const raw = await env.SUKA_KV.get("session:" + token);
+  if (!raw) return { s: null };
+  const s = JSON.parse(raw); s.token = token;
+  const a = await checkActive(s, env);
+  return a.ok ? { s } : { s: null, kicked: !!a.kicked, revoked: !!a.revoked };
 }
 
 export function isAdmin(request, env) {
@@ -60,8 +85,7 @@ export async function sessionFromToken(token, env) {
   if (!/^[0-9a-f]{48}$/.test(token || "")) return null;
   const raw = await env.SUKA_KV.get("session:" + token);
   if (!raw) return null;
-  const s = JSON.parse(raw);
-  const c = await env.SUKA_KV.get("code:" + s.code);
-  if (!c || JSON.parse(c).revoked) return null;
-  return s;
+  const s = JSON.parse(raw); s.token = token;
+  const a = await checkActive(s, env);
+  return a.ok ? s : null;
 }

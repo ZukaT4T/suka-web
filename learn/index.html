@@ -162,7 +162,7 @@ details.mod summary::-webkit-details-marker{display:none}
   // มี token อยู่แล้ว -> ตรวจกับเซิร์ฟเวอร์
   if(token){ submitBtn.disabled=true; err.textContent='กำลังเข้าห้องเรียน…'; err.style.color='var(--ink-2)';
     api('/api/me').then(function(r){ submitBtn.disabled=false; err.textContent='';
-      if(r.ok){ enter(r); } else { token=''; try{localStorage.removeItem(KEY_TOKEN)}catch(e){} }
+      if(r.ok){ enter(r); } else { token=''; try{localStorage.removeItem(KEY_TOKEN)}catch(e){} if(r.kicked){ err.textContent=r.error; } }
     }).catch(function(){ submitBtn.disabled=false; err.textContent='ติดต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง'; err.style.color=''; });
   }
 
@@ -195,6 +195,11 @@ details.mod summary::-webkit-details-marker{display:none}
 
   function renderDocs(){ var L=document.getElementById('docList'); if(!L) return; L.innerHTML='';
     [['DOC_MANUAL','คู่มือประกอบการเรียน'],['DOC_NOTEBOOK','สมุดบันทึก + เช็คลิสต์']].forEach(function(d){ var u=videos[d[0]]; var a=document.createElement(u?'a':'span'); a.className='doc'+(u?'':' off'); a.textContent=(u?'⬇ ':'')+d[1]+(u?'':' · เร็วๆ นี้'); if(u){a.href=u;a.target='_blank';a.rel='noopener';} L.appendChild(a); }); }
+  // ใช้ได้ทีละเครื่อง: ถ้ามีการล็อกอินจากเครื่องอื่น เครื่องนี้ออกจากระบบ
+  function kickOut(msg){ try{localStorage.removeItem(KEY_TOKEN)}catch(e){} token=''; var p=document.getElementById('player'); if(p) p.innerHTML=''; app.hidden=true; gate.hidden=false; document.getElementById('who').hidden=true; err.textContent=msg||'ออกจากระบบแล้ว'; err.style.color=''; }
+  var lastCheck=0;
+  function checkStill(){ if(!token || Date.now()-lastCheck<15000) return; lastCheck=Date.now(); api('/api/me').then(function(r){ if(!r.ok && r.kicked) kickOut(r.error); }).catch(function(){}); }
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='visible') checkStill(); });
   function vid(e){ return videos[e.ep] || e.video || ((media[e.ep]&&media[e.ep].video)?'r2':''); }
   function cover(e){ return (media[e.ep]&&media[e.ep].cover)?('/api/c/'+e.ep):''; }
 
@@ -231,7 +236,7 @@ details.mod summary::-webkit-details-marker{display:none}
     document.getElementById('epTitle').textContent=e.ep+' '+e.title;
     document.getElementById('epDesc').textContent=e.desc;
     var p=document.getElementById('player');
-    if(v==='r2'){ p.innerHTML=''; var vd=document.createElement('video'); vd.controls=true; vd.playsInline=true; vd.preload='metadata'; vd.setAttribute('controlsList','nodownload'); vd.disablePictureInPicture=false; vd.oncontextmenu=function(){return false;}; var c=cover(e); if(c) vd.poster=c; vd.src='/api/v/'+e.ep+'?t='+encodeURIComponent(token); vd.title=e.ep; vd.addEventListener('ended', function(){ if(!prog[e.ep]){ mark(e,true); document.getElementById('doneChk').checked=true; } }); p.appendChild(vd); }
+    if(v==='r2'){ p.innerHTML=''; var vd=document.createElement('video'); vd.controls=true; vd.playsInline=true; vd.preload='metadata'; vd.setAttribute('controlsList','nodownload'); vd.disablePictureInPicture=false; vd.oncontextmenu=function(){return false;}; var c=cover(e); if(c) vd.poster=c; vd.src='/api/v/'+e.ep+'?t='+encodeURIComponent(token); vd.title=e.ep; vd.addEventListener('play', checkStill); vd.addEventListener('error', function(){ lastCheck=0; checkStill(); }); vd.addEventListener('ended', function(){ if(!prog[e.ep]){ mark(e,true); document.getElementById('doneChk').checked=true; } }); p.appendChild(vd); }
     else if(v){ p.innerHTML=''; var f=document.createElement('iframe'); f.src=v; f.allow='autoplay; fullscreen; picture-in-picture; encrypted-media'; f.allowFullscreen=true; f.loading='lazy'; f.title=e.ep; p.appendChild(f); }
     else { p.innerHTML='<div class="ph"><b>'+e.ep+' กำลังผลิต</b>คลิปบทนี้จะขึ้นที่นี่เมื่อตัดต่อเสร็จ ติดตามประกาศในกลุ่ม LINE</div>'; }
     document.getElementById('doneChk').checked=!!prog[e.ep];
