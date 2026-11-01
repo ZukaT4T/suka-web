@@ -208,9 +208,8 @@ async function handleEvent(ev, env) {
   if (pk.key === "live") {
     await logSlip(env, { at: Date.now(), userId, name, result: "live_paid", amount, transRef, pkg: pk.name }, d);
     return reply(ev.replyToken, env,
-      `ได้รับยอด 3,333 บาทเรียบร้อยค่ะ ขอบคุณที่สมัครนะคะ 🙏\n` +
-      `คอร์ส: ${pk.name}\n\n` +
-      `เดี๋ยวแอดมินส่งลิงก์ Google Meet และรายละเอียดการเรียนให้ในแชตนี้นะคะ`);
+      `ได้รับสลิปเรียบร้อยค่ะ 🙏\n` +
+      `รอแอดมินตรวจสอบยอดโอนสักครู่นะคะ`);
   }
 
   await logSlip(env, { at: Date.now(), userId, name, result: "private_paid", amount, transRef, pkg: pk.name }, d);
