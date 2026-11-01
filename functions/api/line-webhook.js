@@ -177,11 +177,15 @@ async function handleEvent(ev, env) {
   const amount = Math.round(Number(d.amount?.amount ?? d.amount) || 0);
   const transRef = String(d.transRef || "");
   const rc = d.receiver || {};
-  const recvOk =
-    String(rc.bank?.id || "") === RECEIVER.bankId &&
-    (String(rc.account?.name?.th || "").includes(RECEIVER.nameTh) ||
-      String(rc.account?.name?.en || "").toUpperCase().includes(RECEIVER.nameEn) ||
-      String(rc.account?.bank?.account || "").replace(/\D/g, "").includes(RECEIVER.acctDigits));
+  // ตรวจผู้รับ: ชื่อต้องเป็น ปุญภัช / PUNYAPHAT หรือเลขบัญชีลงท้าย 3028
+  // โอนผ่านพร้อมเพย์ (สแกน QR) สลิปมักไม่โชว์ธนาคาร/เลขบัญชี -> ยอมรับถ้าชื่อผู้รับตรง
+  const recvBank = String(rc.bank?.id || "");
+  const recvAcctRaw = String(rc.account?.bank?.account || "");
+  const nameOk = String(rc.account?.name?.th || "").includes(RECEIVER.nameTh) ||
+    String(rc.account?.name?.en || "").toUpperCase().includes(RECEIVER.nameEn);
+  const acctOk = recvAcctRaw.replace(/\D/g, "").includes(RECEIVER.acctDigits);
+  const promptpay = !recvAcctRaw || !!rc.account?.proxy;
+  const recvOk = (recvBank === RECEIVER.bankId && (nameOk || acctOk)) || (nameOk && (promptpay || !recvBank));
 
   // กันใช้สลิปซ้ำในระบบเราเองด้วย
   if (transRef && (await env.SUKA_KV.get("slip:" + transRef))) {
@@ -322,15 +326,16 @@ async function toSheet(env, e, d) {
       secret: env.SHEET_SECRET,
       at: e.at,
       name: e.name || "",
-      course: e.amount === 3333 ? `คอร์สสด 1 เดือน (${liveMonth(e.at || Date.now()).mon} ${liveMonth(e.at || Date.now()).beYear})` : (SHEET_COURSE[e.amount] || ""),
+      course: SHEET_COURSE[e.amount] || "",
       amount: e.amount || "",
       paidAt: d.date || "",
       transRef: e.transRef || "",
       recvName: rc.account?.name?.th || rc.account?.name?.en || "",
-      recvAcct: rc.account?.bank?.account || "",
+      recvAcct: rc.account?.bank?.account || (rc.account?.proxy?.account ? "พร้อมเพย์ " + rc.account.proxy.account : (rc.account?.name ? "พร้อมเพย์" : "")),
       result: SHEET_RESULT[e.result] || e.result,
       code: e.code || "",
-      note: e.code ? "บอทส่งรหัส VIP + ลิงก์ห้องเรียน + OpenChat ให้แล้ว" : "",
+      note: e.code ? "บอทส่งรหัส VIP + ลิงก์ห้องเรียน + OpenChat ให้แล้ว"
+        : e.result === "live_paid" ? `รอบ ${liveMonth(e.at || Date.now()).range} ${liveMonth(e.at || Date.now()).beYear} · รอแอดมินตรวจยอดและส่งลิงก์ Google Meet` : "",
     }),
   });
 }
