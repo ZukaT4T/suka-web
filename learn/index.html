@@ -87,6 +87,8 @@ details.mod summary::-webkit-details-marker{display:none}
 .docs{margin-top:22px;background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
 .doc-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 .doc{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1.5px solid var(--navy);color:var(--navy);text-decoration:none;font-family:var(--display);font-size:15px;background:var(--paper-2)}
+.ep-doc{margin-top:14px;border-color:var(--gold,#c9a227);background:#fffaf0}
+.ep-doc[hidden]{display:none}
 .doc.off{border-style:dashed;color:var(--ink-2);border-color:var(--line)}
 @media (max-width:900px){
   .app{grid-template-columns:1fr}
@@ -134,6 +136,7 @@ details.mod summary::-webkit-details-marker{display:none}
         <button class="btn btn-gold" id="nextBtn">บทถัดไป →</button>
         <a class="btn" id="askBtn" target="_blank" rel="noopener">ถามในกลุ่ม LINE</a>
       </div>
+      <a class="doc ep-doc" id="epDoc" hidden>⬇ <span id="epDocName">เอกสารประกอบการเรียน (PDF)</span></a>
     </div>
     <div class="docs" id="docs">
       <div class="eyebrow">เอกสารประกอบ (PDF)</div>
@@ -239,6 +242,7 @@ details.mod summary::-webkit-details-marker{display:none}
     if(v==='r2'){ p.innerHTML=''; var vd=document.createElement('video'); vd.controls=true; vd.playsInline=true; vd.preload='metadata'; vd.setAttribute('controlsList','nodownload'); vd.disablePictureInPicture=false; vd.oncontextmenu=function(){return false;}; var c=cover(e); if(c) vd.poster=c; vd.src='/api/v/'+e.ep+'?t='+encodeURIComponent(token); vd.title=e.ep; vd.addEventListener('play', checkStill); vd.addEventListener('error', function(){ lastCheck=0; checkStill(); }); vd.addEventListener('ended', function(){ if(!prog[e.ep]){ mark(e,true); document.getElementById('doneChk').checked=true; } }); p.appendChild(vd); }
     else if(v){ p.innerHTML=''; var f=document.createElement('iframe'); f.src=v; f.allow='autoplay; fullscreen; picture-in-picture; encrypted-media'; f.allowFullscreen=true; f.loading='lazy'; f.title=e.ep; p.appendChild(f); }
     else { p.innerHTML='<div class="ph"><b>'+e.ep+' กำลังผลิต</b>คลิปบทนี้จะขึ้นที่นี่เมื่อตัดต่อเสร็จ ติดตามประกาศในกลุ่ม LINE</div>'; }
+    var dl=document.getElementById('epDoc'); if(media[e.ep]&&media[e.ep].doc){ dl.href='/api/d/'+e.ep+'?t='+encodeURIComponent(token); document.getElementById('epDocName').textContent='เอกสารประกอบการเรียน '+e.ep+' (PDF)'; dl.hidden=false; } else { dl.hidden=true; dl.removeAttribute('href'); }
     document.getElementById('doneChk').checked=!!prog[e.ep];
     document.getElementById('nextBtn').disabled = (i>=eps.length-1);
     var det=document.querySelector('.ep[data-ep="'+e.ep+'"]'); if(det){ det.closest('details').open=true; }

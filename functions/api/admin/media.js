@@ -2,9 +2,10 @@
 // GET  /api/admin/media                       -> { media: { EP01: { video: bytes, cover: bytes, at } } }
 // PUT  /api/admin/media?ep=EP01&kind=video     body = ไฟล์ mp4
 // PUT  /api/admin/media?ep=EP01&kind=cover     body = ไฟล์ jpg/png
+// PUT  /api/admin/media?ep=EP01&kind=doc       body = ไฟล์ pdf (เอกสารประกอบการเรียนท้ายบท)
 import { json, bad, isUploader } from "../../_lib.js";
 
-const KINDS = { video: { ext: "mp4", types: ["video/mp4"] }, cover: { ext: "jpg", types: ["image/jpeg", "image/png", "image/webp"] } };
+const KINDS = { video: { ext: "mp4", types: ["video/mp4"] }, cover: { ext: "jpg", types: ["image/jpeg", "image/png", "image/webp"] }, doc: { ext: "pdf", types: ["application/pdf"] } };
 
 export async function onRequest({ request, env }) {
   if (!env.SUKA_KV) return bad("ระบบยังไม่พร้อม (KV)", 500);
