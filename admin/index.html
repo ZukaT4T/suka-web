@@ -154,19 +154,19 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06e
 
 
   // ---- media (R2) ----
-  function loadMedia(){
-    api('/api/admin/media').then(function(r){
+  function loadMedia(sync){
+    api('/api/admin/media'+(sync===true?'?sync=1':'')).then(function(r){
       var m=(r.ok&&r.media)||{}; var nv=0,nc=0,nd=0;
       $('mediaList').innerHTML=eps.map(function(e){ var x=m[e.ep]||{}; if(x.video)nv++; if(x.cover)nc++; if(x.doc)nd++; return '<b>'+e.ep+'</b> '+(x.video?'🎬 '+(x.video/1048576).toFixed(1)+'MB':'<span style="color:#c0392b">ไม่มีคลิป</span>')+(x.cover?' · 🖼':'')+(x.doc?' · 📄':''); }).join(' &nbsp;|&nbsp; ');
       $('mediaStat').textContent=r.ok?('คลิป '+nv+'/'+eps.length+' · ปก '+nc+'/'+eps.length+' · เอกสาร '+nd+'/'+eps.length):(r.error||'');
     });
   }
-  $('mediaReload').onclick=loadMedia;
+  $('mediaReload').onclick=function(){ loadMedia(true); };
   $('mediaUp').onclick=function(){
     var files=[].slice.call($('mediaFiles').files||[]); if(!files.length){ $('mediaMsg').textContent='เลือกไฟล์ก่อน'; return; }
     var i=0, okN=0, errs=[]; $('mediaUp').disabled=true;
     (function next(){
-      if(i>=files.length){ $('mediaUp').disabled=false; $('mediaMsg').textContent='อัปโหลดเสร็จ '+okN+'/'+files.length+(errs.length?' · ผิดพลาด: '+errs.join(', '):''); $('mediaMsg').className='msg '+(errs.length?'err':'ok'); loadMedia(); return; }
+      if(i>=files.length){ $('mediaUp').disabled=false; $('mediaMsg').textContent='อัปโหลดเสร็จ '+okN+'/'+files.length+(errs.length?' · ผิดพลาด: '+errs.join(', '):''); $('mediaMsg').className='msg '+(errs.length?'err':'ok'); loadMedia(true); return; }
       var f=files[i++]; var mm=/^(EP\d{2})/i.exec(f.name); var kind=/^video\//.test(f.type)?'video':(/^image\//.test(f.type)?'cover':((f.type==='application/pdf'||/\.pdf$/i.test(f.name))?'doc':''));
       if(!mm||!kind){ errs.push(f.name); return next(); }
       $('mediaMsg').textContent='กำลังอัปโหลด '+i+'/'+files.length+' · '+f.name; $('mediaMsg').className='msg';

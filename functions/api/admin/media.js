@@ -12,7 +12,26 @@ export async function onRequest({ request, env }) {
   if (!env.VIDEOS) return bad("ยังไม่ได้เชื่อมที่เก็บคลิป (R2)", 500);
   if (!(await isUploader(request, env))) return bad("ไม่มีสิทธิ์", 401);
   const index = (await env.SUKA_KV.get("media", "json")) || {};
-  if (request.method === "GET") return json({ ok: true, media: index });
+  if (request.method === "GET") {
+    // ?sync=1 นับใหม่จากไฟล์ที่อยู่จริงใน R2 (แก้ตัวนับเพี้ยนเวลาอัปโหลดหลายไฟล์ติดกัน)
+    if (new URL(request.url).searchParams.get("sync") === "1") {
+      const fresh = {};
+      for (const kind of Object.keys(KINDS)) {
+        let cursor;
+        do {
+          const res = await env.VIDEOS.list({ prefix: kind + "/", cursor });
+          for (const o of res.objects) {
+            const m = /^[a-z]+\/(EP\d{2})\./.exec(o.key);
+            if (m) fresh[m[1]] = Object.assign({}, fresh[m[1]], { [kind]: o.size, at: o.uploaded ? new Date(o.uploaded).getTime() : Date.now() });
+          }
+          cursor = res.truncated ? res.cursor : undefined;
+        } while (cursor);
+      }
+      await env.SUKA_KV.put("media", JSON.stringify(fresh));
+      return json({ ok: true, media: fresh, synced: true });
+    }
+    return json({ ok: true, media: index });
+  }
   if (request.method !== "PUT") return bad("method not allowed", 405);
 
   const url = new URL(request.url);
