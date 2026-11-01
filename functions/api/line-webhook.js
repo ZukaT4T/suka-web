@@ -11,6 +11,7 @@ const PACKAGES = {
   1490: { key: "online", name: "คอร์สออนไลน์ 48 บท" },
   19999: { key: "pv2", name: "Private Coaching 2 เดือน" },
   39999: { key: "pv6", name: "Private Coaching 6 เดือน" },
+  3333: { key: "live", name: "คอร์สสด 1 เดือน (1–30 พ.ย. 2569)", until: "2026-11-30T23:59:59+07:00" }, // คอร์สพิเศษประจำเดือน
   // 79,999 (Private 12 เดือน) ปิดการขายแล้ว 27 ต.ค. 2569 — ถ้ามีคนโอนยอดนี้ บอทจะให้แอดมินตรวจเอง
 };
 // บัญชีรับเงิน: กสิกรไทย (004) ปุญภัช ภูธาราพงษ์ 746-2-43028-5
@@ -39,6 +40,10 @@ const SITE = "https://www.สุขาสอนเทรด.com";
 const IMG_BASE = "https://www.zuka-t4tacademy.com"; // รูปใน Flex ต้องเป็นโดเมนอังกฤษ
 const PAY_SITE = "https://www.zuka-t4tacademy.com"; // ลิงก์จ่ายเงินใช้โดเมนอังกฤษ แชร์ต่อแล้วไม่เพี้ยน
 // แตะการ์ด = ส่งข้อความนี้เข้าแชท แล้วบอทตอบลิงก์เว็บของคอร์สนั้น
+// คอร์สพิเศษประจำเดือน: ขึ้นการ์ดใบแรกจนถึงวันที่ until แล้วหายเองอัตโนมัติ
+const LIVE = { text: "สนใจคอร์สสด 1 เดือน (3,333 บาท) ค่ะ", img: "flex-live-2611.jpg", label: "คอร์สสด 1 เดือน", until: "2026-11-30T23:59:59+07:00",
+  reply: "คอร์สสด 1 เดือน กับโค้ชสุขา 3,333 บาท 🎯\n\n• สอนสดทาง Google Meet\n• วันที่เรียน 1–30 พ.ย.\n• ดูแลและฝึกไปด้วยกัน 1 เดือน\n• ฝึกวิเคราะห์ วางแผน และทำตามแผน จนการเทรดมีระบบ ไม่ใช่เข้าตามอารมณ์\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?buy=live#live\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะส่งลิงก์ Google Meet และรายละเอียดการเรียนให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" };
+const isOpen = (x) => !x.until || Date.now() <= Date.parse(x.until);
 const PICK = {
   online: { text: "สนใจคอร์สออนไลน์ 1,490 บาท ค่ะ", img: "flex-online.jpg", label: "คอร์สออนไลน์",
     reply: "คอร์สออนไลน์ GOLD TRADING FOUNDATION 1,490 บาท 🎯\n\nสมัครและดูวิธีชำระเงินได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?buy=online#pay\n\nโอนแล้วส่งรูปสลิปในแชตนี้ได้เลย ระบบจะส่งรหัส VIP + ลิงก์ห้องเรียนให้ทันทีค่ะ 🙏" },
@@ -48,15 +53,16 @@ const PICK = {
     reply: "Private Coaching 1:1 · 6 เดือน 39,999 บาท (BEST VALUE)\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?buy=pv6#private\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะนัดวันเริ่มเรียนกับโค้ชสุขาให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" },
 };
 const norm = (x) => String(x || "").replace(/\s+/g, "").toLowerCase();
-const PICK_BY_TEXT = Object.fromEntries(Object.values(PICK).map((p) => [norm(p.text), p]));
+const PICK_BY_TEXT = Object.fromEntries([LIVE, ...Object.values(PICK)].map((p) => [norm(p.text), p]));
+const cards = () => [...(isOpen(LIVE) ? [LIVE] : []), ...Object.values(PICK)];
 
 function courseFlex() {
   return {
     type: "flex",
-    altText: "คอร์สสุขาสอนเทรด: ออนไลน์ 1,490 · Private 2 เดือน 19,999 · Private 6 เดือน 39,999 บาท",
+    altText: (isOpen(LIVE) ? "คอร์สสด 1 เดือน 3,333 · " : "") + "คอร์สสุขาสอนเทรด: ออนไลน์ 1,490 · Private 2 เดือน 19,999 · Private 6 เดือน 39,999 บาท",
     contents: {
       type: "carousel",
-      contents: Object.values(PICK).map((p) => ({
+      contents: cards().map((p) => ({
         type: "bubble",
         size: "giga",
         hero: { type: "image", url: IMG_BASE + "/assets/cards/" + p.img, size: "full", aspectRatio: "2:3", aspectMode: "cover",
@@ -118,6 +124,7 @@ async function handleEvent(ev, env) {
     if (RESEND_WORDS.includes(t)) return resendCode(ev, env, userId);
     if (COURSE_WORDS.includes(t)) return sendCourseCards(ev, env);
     const pick = PICK_BY_TEXT[t];
+    if (pick === LIVE && !isOpen(LIVE)) return replyMessages(ev.replyToken, env, [{ type: "text", text: "คอร์สสดรอบนี้ปิดรับสมัครแล้วค่ะ 🙏 ดูคอร์สที่เปิดอยู่ตอนนี้ได้เลยนะคะ" }, courseFlex()]);
     if (pick) return replyMessages(ev.replyToken, env, [{ type: "text", text: pick.reply }]);
     return;
   }
@@ -170,7 +177,7 @@ async function handleEvent(ev, env) {
     return reply(ev.replyToken, env, "ได้รับสลิปแล้วค่ะ แต่ชื่อบัญชีผู้รับไม่ตรงกับบัญชีของสุขาสอนเทรด แอดมินจะตรวจสอบและตอบกลับโดยเร็วนะคะ 🙏");
   }
 
-  const pk = PACKAGES[amount];
+  const pk = PACKAGES[amount] && isOpen(PACKAGES[amount]) ? PACKAGES[amount] : null;
   if (!pk) {
     await logSlip(env, { at: Date.now(), userId, name, result: "amount_mismatch", amount, transRef }, d);
     return reply(ev.replyToken, env, `ได้รับยอดโอน ${amount.toLocaleString("en-US")} บาทแล้วค่ะ ยอดนี้ไม่ตรงกับราคาคอร์ส แอดมินจะตรวจสอบและตอบกลับโดยเร็วนะคะ 🙏`);
@@ -196,6 +203,13 @@ async function handleEvent(ev, env) {
       `คุณได้รับคำเชิญให้เข้าร่วม "โค้ชสุขา : พูดคุยระบบเทรดทองคำ" พูดคุยสอบถามกับโค้ชโดยตรง และเพื่อนๆ เทรดเดอร์ทุกคน (ดูแลตลอดการใช้งาน)\n` +
       `แตะลิงก์เพื่อเข้าร่วมโอเพนแชท:\n${OPENCHAT_URL}`,
       code);
+  }
+
+  if (pk.key === "live") {
+    await logSlip(env, { at: Date.now(), userId, name, result: "live_paid", amount, transRef, pkg: pk.name }, d);
+    return reply(ev.replyToken, env,
+      `ได้รับสลิปเรียบร้อยค่ะ 🙏\n` +
+      `รอแอดมินตรวจสอบยอดโอนสักครู่นะคะ`);
   }
 
   await logSlip(env, { at: Date.now(), userId, name, result: "private_paid", amount, transRef, pkg: pk.name }, d);
@@ -270,7 +284,7 @@ async function logSlip(env, entry, slip) {
 }
 
 // ชื่อคอร์สต้องตรงกับแท็บ "ราคาคอร์ส" ในชีต
-const SHEET_COURSE = { 1490: "คอร์สออนไลน์", 19999: "คอร์สไพรเวท 2 เดือน", 39999: "คอร์สไพรเวท 6 เดือน" };
+const SHEET_COURSE = { 1490: "คอร์สออนไลน์", 19999: "คอร์สไพรเวท 2 เดือน", 39999: "คอร์สไพรเวท 6 เดือน", 3333: "คอร์สสด 1 เดือน (พ.ย.)" };
 const SHEET_RESULT = {
   issued: "ผ่าน · ออกรหัส VIP อัตโนมัติ",
   private_paid: "ผ่าน · ไพรเวท รอนัดเรียน",
