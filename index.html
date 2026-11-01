@@ -347,7 +347,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
 <nav>
   <a class="logo" href="#"><span class="coin">ส</span>สุขาสอนเทรด</a>
   <div class="navlinks">
-    <a href="#live" data-until="2026-11-30T23:59:59+07:00">คอร์สสด พ.ย.</a>
+    <a href="#live">คอร์สสด <span class="lm-m">พ.ย.</span></a>
     <a href="#level">คุณอยู่ตรงไหน</a>
     <a href="#course">บทเรียน 48 EP</a>
     <a href="#private">คอร์สไพรเวท</a>
@@ -377,12 +377,12 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   </div>
 </section>
 
-<!-- คอร์สพิเศษประจำเดือน: ซ่อนเองอัตโนมัติหลังวันที่ data-until -->
-<section id="live" data-until="2026-11-30T23:59:59+07:00">
+<!-- คอร์สพิเศษประจำเดือน: เปิดทุกเดือน · 10 วันสุดท้ายของเดือนเปลี่ยนเป็นเดือนถัดไปอัตโนมัติ (สคริปต์ liveMonth ด้านล่าง) -->
+<section id="live">
   <div class="live-wrap">
-    <a class="live-img" href="#pay" data-buy="live" aria-label="สมัครคอร์สสด 1 เดือน 3,333 บาท"><img src="assets/cards/live-2611.jpg" width="900" height="1125" loading="lazy" alt="สุขาสอนเทรด คอร์สสด 1 เดือน: อยากเทรดเป็น แต่พอเจอหน้าจอจริงกลับไม่รู้ว่าต้องทำอะไร? สอนสดทาง Google Meet วันที่เรียน 1–30 พ.ย. ดูแล 1 เดือน ค่าเรียนตลอดคอร์ส 3,333 บาท สนใจสมัครทัก LINE @zuka"></a>
+    <a class="live-img" href="#pay" data-buy="live" aria-label="สมัครคอร์สสด 1 เดือน 3,333 บาท"><img id="liveImg" src="assets/live/live-2026-11.jpg" width="900" height="1125" loading="lazy" alt="สุขาสอนเทรด คอร์สสด 1 เดือน: อยากเทรดเป็น แต่พอเจอหน้าจอจริงกลับไม่รู้ว่าต้องทำอะไร? สอนสดทาง Google Meet วันที่เรียน 1–30 พ.ย. ดูแล 1 เดือน ค่าเรียนตลอดคอร์ส 3,333 บาท สนใจสมัครทัก LINE @zuka"></a>
     <div>
-      <div class="eyebrow">คอร์สพิเศษประจำเดือน · พ.ย. 2569</div>
+      <div class="eyebrow">คอร์สพิเศษประจำเดือน · <span class="lm-my">พ.ย. 2569</span></div>
       <h2>คอร์สสด 1 เดือน กับโค้ชสุขา</h2>
       <p class="muted" style="margin-top:10px">อยากเทรดเป็น แต่พอเจอหน้าจอจริงกลับไม่รู้ว่าต้องทำอะไร? ฝึกวิเคราะห์ วางแผน และทำตามแผน จนการเทรดมีระบบ ไม่ใช่เข้าตามอารมณ์</p>
       <ul class="live-list">
@@ -391,7 +391,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
         <li>คิดก่อนเข้าเทรด แล้วค่อยทำตามแผน</li>
         <li>สร้างวินัย จากสิ่งเล็ก ๆ ที่ทำซ้ำได้จริง</li>
       </ul>
-      <div class="live-meta"><span><b>Google Meet</b>สอนสด</span><span><b>1–30 พ.ย.</b>วันที่เรียน</span><span><b>ดูแล 1 เดือน</b>ฝึกไปด้วยกัน</span></div>
+      <div class="live-meta"><span><b>Google Meet</b>สอนสด</span><span><b class="lm-range">1–30 พ.ย.</b>วันที่เรียน</span><span><b>ดูแล 1 เดือน</b>ฝึกไปด้วยกัน</span></div>
       <div class="live-price">ค่าเรียนตลอดคอร์ส <b>3,333</b> บาท</div>
       <div class="live-cta">
         <a class="btn btn-gold" href="#pay" data-buy="live">สมัครคอร์สสด 3,333 บาท</a>
@@ -598,7 +598,7 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
         <label><input type="radio" name="pk" value="online"><span class="nm">คอร์สออนไลน์ 48 บท<small>48 บทเรียน · เรียนซ้ำได้ตลอดชีพ · ดูแลในกลุ่ม · คู่มือ PDF</small></span><span class="pr">1,490</span></label>
         <label><input type="radio" name="pk" value="pv2"><span class="nm">Private 2 เดือน<small>1:1 · พบตัวต่อตัว 1 ครั้ง · ทบทวนออนไลน์ 2 ครั้ง</small></span><span class="pr">19,999</span></label>
         <label><input type="radio" name="pk" value="pv6"><span class="nm">Private 6 เดือน<small>1:1 · พบตัวต่อตัว 3 ครั้ง · ทบทวนออนไลน์ 6 ครั้ง · BEST VALUE</small></span><span class="pr">39,999</span></label>
-        <label data-until="2026-11-30T23:59:59+07:00"><input type="radio" name="pk" value="live"><span class="nm">คอร์สสด 1 เดือน (พ.ย.)<small>สอนสดทาง Google Meet · 1–30 พ.ย. · ดูแล 1 เดือน</small></span><span class="pr">3,333</span></label>
+        <label><input type="radio" name="pk" value="live"><span class="nm">คอร์สสด 1 เดือน (<span class="lm-m">พ.ย.</span>)<small>สอนสดทาง Google Meet · <span class="lm-range">1–30 พ.ย.</span> · ดูแล 1 เดือน</small></span><span class="pr">3,333</span></label>
         
       </div>
       <div class="co-amt"><span>ยอดที่ต้องโอน</span><b><span id="coAmt">1,490</span> บาท</b></div>
@@ -630,10 +630,18 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
 </script>
 <script>
 (function(){
-  var PK={online:{n:'คอร์สออนไลน์ 48 บท',p:1490},pv2:{n:'Private Coaching 2 เดือน',p:19999},pv6:{n:'Private Coaching 6 เดือน',p:39999},live:{n:'คอร์สสด 1 เดือน (พ.ย.)',p:3333,until:'2026-11-30T23:59:59+07:00'}};
-  // ซ่อนคอร์สพิเศษที่หมดเขตแล้ว (ทั้งหน้า)
-  document.querySelectorAll('[data-until]').forEach(function(el){ if(Date.now()>Date.parse(el.getAttribute('data-until'))) el.remove(); });
-  if(PK.live && Date.now()>Date.parse(PK.live.until)) delete PK.live;
+  var PK={online:{n:'คอร์สออนไลน์ 48 บท',p:1490},pv2:{n:'Private Coaching 2 เดือน',p:19999},pv6:{n:'Private Coaching 6 เดือน',p:39999},live:{n:'คอร์สสด 1 เดือน',p:3333}};
+  // คอร์สพิเศษประจำเดือน: 10 วันสุดท้ายของเดือน เปลี่ยนเป็นเดือนถัดไป (ตรงกับบอท LINE)
+  (function(){
+    var TH=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'], LAST='2028-12';
+    var t=new Date(Date.now()+7*3600*1000), y=t.getUTCFullYear(), m=t.getUTCMonth()+1;
+    var last=new Date(Date.UTC(y,m,0)).getUTCDate(); if(t.getUTCDate()>last-10){ m++; if(m===13){m=1;y++;} }
+    var days=new Date(Date.UTC(y,m,0)).getUTCDate(), key=y+'-'+(m<10?'0':'')+m, mon=TH[m-1], range='1–'+days+' '+mon;
+    function each(sel,txt){ document.querySelectorAll(sel).forEach(function(e){ e.textContent=txt; }); }
+    each('.lm-m',mon); each('.lm-range',range); each('.lm-my',mon+' '+(y+543));
+    var img=document.getElementById('liveImg'); if(img){ img.src='assets/live/live-'+(key<=LAST?key:LAST)+'.jpg'; img.alt=img.alt.replace(/วันที่เรียน [^ ]+ [^ ]+/,'วันที่เรียน '+range); }
+    PK.live.n='คอร์สสด 1 เดือน ('+mon+' '+(y+543)+')';
+  })();
   var co=document.getElementById('checkout'); if(!co) return;
   var last=null;
   function fmt(n){return n.toLocaleString('en-US');}
