@@ -3,7 +3,7 @@
 // PUT  /api/admin/media?ep=EP01&kind=video     body = ไฟล์ mp4
 // PUT  /api/admin/media?ep=EP01&kind=cover     body = ไฟล์ jpg/png
 // PUT  /api/admin/media?ep=EP01&kind=doc       body = ไฟล์ pdf (เอกสารประกอบการเรียนท้ายบท)
-import { json, bad, isUploader } from "../../_lib.js";
+import { json, bad, isUploader, EP_RE } from "../../_lib.js";
 
 const KINDS = { video: { ext: "mp4", types: ["video/mp4"] }, cover: { ext: "jpg", types: ["image/jpeg", "image/png", "image/webp"] }, doc: { ext: "pdf", types: ["application/pdf"] } };
 
@@ -21,7 +21,7 @@ export async function onRequest({ request, env }) {
         do {
           const res = await env.VIDEOS.list({ prefix: kind + "/", cursor });
           for (const o of res.objects) {
-            const m = /^[a-z]+\/(EP\d{2})\./.exec(o.key);
+            const m = /^[a-z]+\/((?:P2-)?EP\d{2})\./.exec(o.key);
             if (m) fresh[m[1]] = Object.assign({}, fresh[m[1]], { [kind]: o.size, at: o.uploaded ? new Date(o.uploaded).getTime() : Date.now() });
           }
           cursor = res.truncated ? res.cursor : undefined;
@@ -37,7 +37,7 @@ export async function onRequest({ request, env }) {
   const url = new URL(request.url);
   const ep = url.searchParams.get("ep") || "";
   const kind = url.searchParams.get("kind") || "";
-  if (!/^EP\d{2}$/.test(ep) || !KINDS[kind]) return bad("ep/kind ไม่ถูกต้อง");
+  if (!EP_RE.test(ep) || !KINDS[kind]) return bad("ep/kind ไม่ถูกต้อง");
   const type = (request.headers.get("content-type") || "").split(";")[0].trim();
   if (!KINDS[kind].types.includes(type)) return bad("ชนิดไฟล์ไม่ถูกต้อง: " + type);
   const body = await request.arrayBuffer();

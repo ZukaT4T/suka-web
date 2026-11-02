@@ -1,5 +1,5 @@
 // PUT /api/progress  { progress: { EP01: timestamp, ... } }  บันทึกความคืบหน้าตามรหัส (ซิงก์ทุกเครื่อง)
-import { json, bad, getSession, readJSON } from "../_lib.js";
+import { json, bad, getSession, readJSON, EP_RE } from "../_lib.js";
 
 export async function onRequestPut({ request, env }) {
   const s = await getSession(request, env);
@@ -7,7 +7,7 @@ export async function onRequestPut({ request, env }) {
   const body = await readJSON(request);
   const p = body.progress && typeof body.progress === "object" ? body.progress : {};
   const clean = {};
-  for (const k of Object.keys(p)) if (/^EP\d{2}$/.test(k)) clean[k] = Number(p[k]) || 1;
+  for (const k of Object.keys(p)) if (EP_RE.test(k)) clean[k] = Number(p[k]) || 1;
   await env.SUKA_KV.put("progress:" + s.code, JSON.stringify(clean));
   return json({ ok: true, count: Object.keys(clean).length });
 }

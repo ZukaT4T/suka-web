@@ -1,5 +1,5 @@
 // GET /api/admin/videos -> { EP01: url, ... }   PUT { videos: {...} }  (ลิงก์คลิปเห็นเฉพาะนักเรียนที่ login)
-import { json, bad, isAdmin, readJSON } from "../../_lib.js";
+import { json, bad, isAdmin, readJSON, EP_RE } from "../../_lib.js";
 
 export async function onRequest({ request, env }) {
   if (!env.SUKA_KV) return bad("ระบบยังไม่พร้อม (KV)", 500);
@@ -11,7 +11,7 @@ export async function onRequest({ request, env }) {
     const clean = {};
     for (const k of Object.keys(v)) {
       const url = String(v[k] || "").trim();
-      if ((/^EP\d{2}$/.test(k) || /^DOC_(MANUAL|NOTEBOOK)$/.test(k)) && /^https:\/\//.test(url)) clean[k] = url.slice(0, 500);
+      if ((EP_RE.test(k) || /^DOC_(MANUAL|NOTEBOOK)$/.test(k)) && /^https:\/\//.test(url)) clean[k] = url.slice(0, 500);
     }
     await env.SUKA_KV.put("videos", JSON.stringify(clean));
     return json({ ok: true, count: Object.keys(clean).length });
