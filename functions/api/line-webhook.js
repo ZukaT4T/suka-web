@@ -56,6 +56,15 @@ export function liveMonth(now = Date.now()) {
   return { key, imgKey: key <= LIVE_LAST_IMG ? key : LIVE_LAST_IMG, mon, days, beYear: y + 543, range: `1–${days} ${mon}` };
 }
 const LIVE_TEXT = "สนใจคอร์สสด 1 เดือน (3,333 บาท) ค่ะ";
+// กลุ่ม OpenChat ของคอร์สสด (โค้ชสุขา รอบพิเศษ) — ตั้งรหัสเข้ากลุ่มตามวันที่โอน
+const LIVE_OPENCHAT_URL = "https://line.me/ti/g2/1-o8fbc0cZLD3ftMyTvFs51Zzpm8-xXGHBu3yQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
+// วันที่โอนในสลิป (เวลาไทย) -> "ววดด" เช่น 2 พ.ย. = "0211", 10 พ.ย. = "1011"
+export function groupCode(slipDate, now = Date.now()) {
+  let t = Date.parse(slipDate || "");
+  if (!Number.isFinite(t)) t = now;
+  const b = new Date(t + 7 * 3600 * 1000);
+  return String(b.getUTCDate()).padStart(2, "0") + String(b.getUTCMonth() + 1).padStart(2, "0");
+}
 function liveCard() {
   const lm = liveMonth();
   return { text: LIVE_TEXT, label: "คอร์สสด 1 เดือน", imgUrl: IMG_BASE + "/assets/live/flex-live-" + lm.imgKey + ".jpg",
@@ -177,11 +186,15 @@ async function handleEvent(ev, env) {
   const amount = Math.round(Number(d.amount?.amount ?? d.amount) || 0);
   const transRef = String(d.transRef || "");
   const rc = d.receiver || {};
-  const recvOk =
-    String(rc.bank?.id || "") === RECEIVER.bankId &&
-    (String(rc.account?.name?.th || "").includes(RECEIVER.nameTh) ||
-      String(rc.account?.name?.en || "").toUpperCase().includes(RECEIVER.nameEn) ||
-      String(rc.account?.bank?.account || "").replace(/\D/g, "").includes(RECEIVER.acctDigits));
+  // ตรวจผู้รับ: ชื่อต้องเป็น ปุญภัช / PUNYAPHAT หรือเลขบัญชีลงท้าย 3028
+  // โอนผ่านพร้อมเพย์ (สแกน QR) สลิปมักไม่โชว์ธนาคาร/เลขบัญชี -> ยอมรับถ้าชื่อผู้รับตรง
+  const recvBank = String(rc.bank?.id || "");
+  const recvAcctRaw = String(rc.account?.bank?.account || "");
+  const nameOk = String(rc.account?.name?.th || "").includes(RECEIVER.nameTh) ||
+    String(rc.account?.name?.en || "").toUpperCase().includes(RECEIVER.nameEn);
+  const acctOk = recvAcctRaw.replace(/\D/g, "").includes(RECEIVER.acctDigits);
+  const promptpay = !recvAcctRaw || !!rc.account?.proxy;
+  const recvOk = (recvBank === RECEIVER.bankId && (nameOk || acctOk)) || (nameOk && (promptpay || !recvBank));
 
   // กันใช้สลิปซ้ำในระบบเราเองด้วย
   if (transRef && (await env.SUKA_KV.get("slip:" + transRef))) {
@@ -223,11 +236,16 @@ async function handleEvent(ev, env) {
   }
 
   if (pk.key === "live") {
+    // สลิปผ่าน -> ส่งลิงก์ OpenChat รอบพิเศษ + รหัสเข้ากลุ่ม = วันที่โอนในสลิป (วว/ดด) เช่น 2 พ.ย. = 0211
     const lm = liveMonth();
-    await logSlip(env, { at: Date.now(), userId, name, result: "live_paid", amount, transRef, pkg: `${pk.name} (${lm.range} ${lm.beYear})` }, d);
+    const gcode = groupCode(d.date);
+    await logSlip(env, { at: Date.now(), userId, name, result: "live_paid", amount, transRef, code: "กลุ่ม " + gcode, pkg: `${pk.name} (${lm.range} ${lm.beYear})` }, d);
     return reply(ev.replyToken, env,
-      `ได้รับสลิปเรียบร้อยค่ะ 🙏\n` +
-      `รอแอดมินตรวจสอบยอดโอนสักครู่นะคะ`);
+      `ได้รับสลิปยอด 3,333 บาท ตรวจสอบเรียบร้อยแล้วค่ะ ขอบคุณที่สมัครคอร์สสด 1 เดือน (รอบ ${lm.range}) นะคะ 🙏\n\n` +
+      `คุณได้รับคำเชิญให้เข้าร่วม "โค้ชสุขา รอบพิเศษ 🇺🇸" โปรดแตะลิงก์ด้านล่างเพื่อเข้าร่วมโอเพนแชทนี้\n${LIVE_OPENCHAT_URL}\n\n` +
+      `🔑 รหัสเข้ากลุ่ม: ${gcode}\n\n` +
+      `หลังจากกดเข้ากลุ่มแล้ว รบกวนแจ้ง ชื่อเล่น (จังหวัด) และอีเมลที่ใช้เข้า Google Meet ด้วยนะคะ`,
+      gcode);
   }
 
   await logSlip(env, { at: Date.now(), userId, name, result: "private_paid", amount, transRef, pkg: pk.name }, d);
@@ -306,6 +324,7 @@ const SHEET_COURSE = { 1490: "คอร์สออนไลน์", 19999: "ค
 const SHEET_RESULT = {
   issued: "ผ่าน · ออกรหัส VIP อัตโนมัติ",
   private_paid: "ผ่าน · ไพรเวท รอนัดเรียน",
+  live_paid: "ผ่าน · คอร์สสด ส่งลิงก์กลุ่มรอบพิเศษแล้ว",
   duplicate: "สลิปซ้ำ",
   wrong_receiver: "ผู้รับไม่ตรง",
   amount_mismatch: "ยอดไม่ตรงราคาคอร์ส",
@@ -322,15 +341,16 @@ async function toSheet(env, e, d) {
       secret: env.SHEET_SECRET,
       at: e.at,
       name: e.name || "",
-      course: e.amount === 3333 ? `คอร์สสด 1 เดือน (${liveMonth(e.at || Date.now()).mon} ${liveMonth(e.at || Date.now()).beYear})` : (SHEET_COURSE[e.amount] || ""),
+      course: SHEET_COURSE[e.amount] || "",
       amount: e.amount || "",
       paidAt: d.date || "",
       transRef: e.transRef || "",
       recvName: rc.account?.name?.th || rc.account?.name?.en || "",
-      recvAcct: rc.account?.bank?.account || "",
+      recvAcct: rc.account?.bank?.account || (rc.account?.proxy?.account ? "พร้อมเพย์ " + rc.account.proxy.account : (rc.account?.name ? "พร้อมเพย์" : "")),
       result: SHEET_RESULT[e.result] || e.result,
       code: e.code || "",
-      note: e.code ? "บอทส่งรหัส VIP + ลิงก์ห้องเรียน + OpenChat ให้แล้ว" : "",
+      note: e.result === "issued" ? "บอทส่งรหัส VIP + ลิงก์ห้องเรียน + OpenChat ให้แล้ว"
+        : e.result === "live_paid" ? `รอบ ${liveMonth(e.at || Date.now()).range} ${liveMonth(e.at || Date.now()).beYear} · บอทส่งลิงก์ OpenChat รอบพิเศษ + ${e.code} ให้แล้ว · รอลูกค้าแจ้งชื่อเล่น (จังหวัด) + อีเมล Google Meet` : "",
     }),
   });
 }
