@@ -145,7 +145,7 @@ details.mod summary::-webkit-details-marker{display:none}
 </div>
 </div>
 
-<script src="../lessons.js"></script>
+<script src="../lessons.js?v=20261102"></script>
 <script>
 (function(){
   var D = window.SUKA; if(!D) return;
@@ -214,7 +214,7 @@ details.mod summary::-webkit-details-marker{display:none}
     parts.forEach(function(pt){
       var mods = D.modules.filter(function(m){ return (m.part||1)===pt.id; });
       var n = mods.reduce(function(a,m){ return a+m.eps.length; },0);
-      var h=document.createElement('div'); h.className='part-h'; h.innerHTML='<b>'+pt.title+'</b>'+pt.sub+(n?' · '+n+' EP':''); list.appendChild(h);
+      if(pt.title){ var h=document.createElement('div'); h.className='part-h'; h.innerHTML='<b>'+pt.title+'</b>'+pt.sub+(n?' · '+n+' EP':''); list.appendChild(h); }
       if(!mods.length){ var sn=document.createElement('div'); sn.className='part-soon'; sn.textContent='🎬 '+(pt.soon||'คลิปกำลังผลิต'); list.appendChild(sn); }
       mods.forEach(function(m){ buildMod(m, list); });
     });

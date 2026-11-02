@@ -1,0 +1,6 @@
+/lessons.js
+  Cache-Control: no-cache
+/learn/*
+  Cache-Control: no-cache
+/admin/*
+  Cache-Control: no-cache
