@@ -57,6 +57,9 @@ nav{display:flex;align-items:center;justify-content:space-between;gap:16px;paddi
 .prog .n{font-family:var(--display);font-weight:600;font-variant-numeric:tabular-nums}
 .list{overflow:auto;min-width:0}
 details.mod{border-bottom:1px solid var(--line)}
+.part-h{padding:14px 16px 10px;background:var(--navy-grad,#14213d);color:#fff;font-size:13px;line-height:1.45}
+.part-h b{display:block;font-family:var(--display);font-size:15px;color:var(--gold-light,#f3d77a);letter-spacing:.04em}
+.part-soon{padding:14px 16px;font-size:13px;color:var(--ink-2,#5b6475);border-bottom:1px solid var(--line);background:rgba(212,175,55,.08)}
 details.mod summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;padding:12px 16px;font-size:14px}
 details.mod summary::-webkit-details-marker{display:none}
 .mod .num{font-family:var(--display);font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
@@ -207,7 +210,17 @@ details.mod summary::-webkit-details-marker{display:none}
 
   function buildList(){
     var list=document.getElementById('list'); list.innerHTML='';
-    D.modules.forEach(function(m){
+    var parts = D.parts || [{ id: 1, title: '', sub: '' }];
+    parts.forEach(function(pt){
+      var mods = D.modules.filter(function(m){ return (m.part||1)===pt.id; });
+      var n = mods.reduce(function(a,m){ return a+m.eps.length; },0);
+      var h=document.createElement('div'); h.className='part-h'; h.innerHTML='<b>'+pt.title+'</b>'+pt.sub+(n?' · '+n+' EP':''); list.appendChild(h);
+      if(!mods.length){ var sn=document.createElement('div'); sn.className='part-soon'; sn.textContent='🎬 '+(pt.soon||'คลิปกำลังผลิต'); list.appendChild(sn); }
+      mods.forEach(function(m){ buildMod(m, list); });
+    });
+    refresh();
+  }
+  function buildMod(m, list){
       var det=document.createElement('details'); det.className='mod';
       det.innerHTML='<summary><span class="num">'+String(m.id).padStart(2,'0')+'</span><span class="mt">'+m.title+'</span><span class="done" data-mod="'+m.id+'"></span></summary>';
       m.eps.forEach(function(e){
@@ -217,8 +230,6 @@ details.mod summary::-webkit-details-marker{display:none}
         det.appendChild(b);
       });
       list.appendChild(det);
-    });
-    refresh();
   }
 
   function refresh(){
@@ -231,7 +242,8 @@ details.mod summary::-webkit-details-marker{display:none}
 
   function show(i){
     cur=i; var e=eps[i]; var v=vid(e);
-    document.getElementById('epMod').textContent='ภาค '+e.mod.id+' · '+e.mod.title;
+    var pt=(D.parts||[]).filter(function(x){ return x.id===(e.mod.part||1); })[0];
+    document.getElementById('epMod').textContent=(pt?pt.title+' · ':'')+'ภาค '+e.mod.id+' · '+e.mod.title;
     document.getElementById('epTitle').textContent=e.ep+' '+e.title;
     document.getElementById('epDesc').textContent=e.desc;
     var p=document.getElementById('player');

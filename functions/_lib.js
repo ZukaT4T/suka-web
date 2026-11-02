@@ -5,6 +5,9 @@ export const json = (data, status = 200, extra = {}) =>
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", ...extra },
   });
 
+// รหัสบทเรียน: Part 1 = EP01–EP48, Part 2 = P2-EP01, P2-EP02, …
+export const EP_RE = /^(?:P2-)?EP\d{2}$/;
+
 export const bad = (msg, status = 400) => json({ ok: false, error: msg }, status);
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // ตัดตัวที่สับสน (0/O, 1/I)
