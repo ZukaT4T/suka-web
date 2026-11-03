@@ -665,12 +665,12 @@ footer{padding-block:32px 48px;font-size:14px;color:var(--ink-2);display:grid;ga
   document.getElementById('coCopy').addEventListener('click',function(){ var b=this; var done=function(){b.textContent='คัดลอกแล้ว';setTimeout(function(){b.textContent='คัดลอกเลขบัญชี'},1500)}; if(navigator.clipboard) navigator.clipboard.writeText('7462430285').then(done).catch(function(){}); });
 })();
 </script>
-<script src="lessons.js?v=20261102"></script>
+<script src="lessons.js?v=20261103"></script>
 <script>
 (function(){
   var d = window.SUKA; if(!d) return;
   var box = document.getElementById('mods');
-  d.modules.forEach(function(m, i){
+  d.modules.filter(function(m){ return (m.part||1)===1; }).forEach(function(m, i){
     var det = document.createElement('details'); det.className='mod'; det.id='m'+m.id; if(i===0) det.open=true;
     var mins = m.eps.reduce(function(a,e){return a+(e.duration||0)},0);
     det.innerHTML = '<summary><span class="num">'+String(m.id).padStart(2,'0')+'</span><span><span class="mt">'+m.title+'</span><br><span class="ms">'+m.sub+'</span></span><span class="cnt">'+m.eps.length+' บท · ~'+mins+' นาที</span></summary>'
