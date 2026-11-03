@@ -96,7 +96,8 @@ window.SUKA = {
     { id: 10, part: 2, title: "บทเรียนจากคลาสสด", sub: "ชุดที่ 1", eps: [
       { ep: "P2-EP01", title: "โครงสร้างราคา", desc: "", duration: 18, video: "" },
       { ep: "P2-EP02", title: "แนวรับแนวต้าน", desc: "", duration: 20, video: "" },
-      { ep: "P2-EP03", title: "ขากบ", desc: "", duration: 7, video: "" }
+      { ep: "P2-EP03", title: "ขากบ", desc: "", duration: 7, video: "" },
+      { ep: "P2-EP04", title: "เก็บบอดี้", desc: "", duration: 11, video: "" }
     ]}
     // ---- เพิ่มบท Part 2 ต่อจากนี้ ----
     // ตัวอย่างเมื่อคลิปพร้อม:
