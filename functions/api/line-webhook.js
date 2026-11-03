@@ -177,8 +177,16 @@ async function handleEvent(ev, env) {
     return reply(ev.replyToken, env, "สลิปนี้เคยถูกใช้แล้วค่ะ ถ้าเป็นการโอนใหม่ รบกวนส่งสลิปใบล่าสุดนะคะ แอดมินจะตรวจสอบให้อีกครั้งค่ะ 🙏");
   }
   if (!r.ok || res?.status !== 200 || !res?.data) {
+    const why = String(res?.message || r.status);
+    // ระบบตรวจสลิปขัดข้อง (หมดอายุ/โควตาหมด/เซิร์ฟเวอร์ล่ม) หรือธนาคารยังไม่ออกสลิป -> แจ้งลูกค้าว่าได้รับแล้ว + เตือนแอดมิน
+    if (SLIP_SERVICE_DOWN.includes(why) || r.status >= 500 || r.status === 401 || r.status === 403 || why === "slip_pending") {
+      await logSlip(env, { at: Date.now(), userId, name, result: "needs_admin", detail: why }, {});
+      await alertAdmin(env, `⚠️ บอทตรวจสลิปอัตโนมัติไม่ได้ (${why})\nมีสลิปจาก ${name || "ลูกค้า"} รอแอดมินตรวจในแชต @zuka` +
+        (why === "slip_pending" ? "" : "\n\nถ้าขึ้น application_expired / quota_exceeded = ต้องต่ออายุ/เติมโควตา EasySlip"));
+      return reply(ev.replyToken, env, "ได้รับสลิปเรียบร้อยค่ะ 🙏\nตอนนี้ระบบตรวจสลิปอัตโนมัติขัดข้องชั่วคราว แอดมินจะตรวจสอบยอดโอนและส่งรหัส/ลิงก์เข้าเรียนให้ในแชตนี้โดยเร็วที่สุดนะคะ");
+    }
     // ไม่ใช่สลิป หรืออ่านไม่ได้ -> เงียบไว้ ให้แอดมินดู (ลูกค้าอาจส่งรูปอื่น)
-    await logSlip(env, { at: Date.now(), userId, name, result: "not_slip", detail: res?.message || r.status });
+    await logSlip(env, { at: Date.now(), userId, name, result: "not_slip", detail: why });
     return;
   }
 
@@ -312,6 +320,22 @@ async function displayName(userId, env) {
 }
 
 // เก็บประวัติ 200 รายการล่าสุด ให้หน้าแอดมินดู + ส่งลง Google Sheet (ถ้าตั้ง SHEET_URL ไว้)
+// ข้อความ error จาก EasySlip ที่แปลว่าระบบตรวจสลิปใช้งานไม่ได้ (ไม่ใช่ความผิดของลูกค้า)
+const SLIP_SERVICE_DOWN = ["application_expired", "application_deactivated", "quota_exceeded", "unauthorized", "access_denied", "account_not_verified", "server_error", "api_server_error"];
+// LINE ของสุขา (ผู้ดูแล) สำหรับแจ้งเตือน — ส่งไม่เกิน 1 ครั้ง/30 นาที
+const ADMIN_LINE_USER = "Uad73450d24642ef2a278b435248bdffe";
+async function alertAdmin(env, text) {
+  try {
+    if (await env.SUKA_KV.get("alert:slipdown")) return;
+    await env.SUKA_KV.put("alert:slipdown", "1", { expirationTtl: 1800 });
+    await fetch("https://api.line.me/v2/bot/message/push", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${env.LINE_CHANNEL_TOKEN}` },
+      body: JSON.stringify({ to: ADMIN_LINE_USER, messages: [{ type: "text", text }] }),
+    });
+  } catch (_) {}
+}
+
 async function logSlip(env, entry, slip) {
   const list = (await env.SUKA_KV.get("sliplog", "json")) || [];
   list.unshift(entry);
@@ -325,6 +349,7 @@ const SHEET_RESULT = {
   issued: "ผ่าน · ออกรหัส VIP อัตโนมัติ",
   private_paid: "ผ่าน · ไพรเวท รอนัดเรียน",
   live_paid: "ผ่าน · คอร์สสด ส่งลิงก์กลุ่มรอบพิเศษแล้ว",
+  needs_admin: "รอแอดมินตรวจ (ระบบตรวจสลิปขัดข้อง)",
   duplicate: "สลิปซ้ำ",
   wrong_receiver: "ผู้รับไม่ตรง",
   amount_mismatch: "ยอดไม่ตรงราคาคอร์ส",
@@ -350,6 +375,7 @@ async function toSheet(env, e, d) {
       result: SHEET_RESULT[e.result] || e.result,
       code: e.code || "",
       note: e.result === "issued" ? "บอทส่งรหัส VIP + ลิงก์ห้องเรียน + OpenChat ให้แล้ว"
+        : e.result === "needs_admin" ? `ระบบตรวจสลิปขัดข้อง (${e.detail}) · ดูรูปสลิปในแชต LINE แล้วตรวจยอดในแอปธนาคาร`
         : e.result === "live_paid" ? `รอบ ${liveMonth(e.at || Date.now()).range} ${liveMonth(e.at || Date.now()).beYear} · บอทส่งลิงก์ OpenChat รอบพิเศษ + ${e.code} ให้แล้ว · รอลูกค้าแจ้งชื่อเล่น (จังหวัด) + อีเมล Google Meet` : "",
     }),
   });
