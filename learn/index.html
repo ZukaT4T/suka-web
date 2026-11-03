@@ -214,7 +214,7 @@ details.mod summary::-webkit-details-marker{display:none}
     parts.forEach(function(pt){
       var mods = D.modules.filter(function(m){ return (m.part||1)===pt.id; });
       var n = mods.reduce(function(a,m){ return a+m.eps.length; },0);
-      if(pt.title){ var h=document.createElement('div'); h.className='part-h'; h.innerHTML='<b>'+pt.title+'</b>'+pt.sub+(n?' · '+n+' EP':''); list.appendChild(h); }
+      if(pt.title){ var h=document.createElement('div'); h.className='part-h'; h.style.cursor='pointer'; h.title='แตะเพื่อเปิด/ปิดรายการบท'; h.addEventListener('click', function(){ var ds=[], el=h.nextElementSibling; while(el && !el.classList.contains('part-h')){ if(el.tagName==='DETAILS') ds.push(el); el=el.nextElementSibling; } var open=!ds.every(function(d){return d.open}); ds.forEach(function(d){ d.open=open; }); if(open&&ds[0]) ds[0].scrollIntoView({block:'nearest',behavior:'smooth'}); }); h.innerHTML='<b>'+pt.title+'</b>'+pt.sub+(n?' · '+n+' EP':''); list.appendChild(h); }
       if(!mods.length){ var sn=document.createElement('div'); sn.className='part-soon'; sn.textContent='🎬 '+(pt.soon||'คลิปกำลังผลิต'); list.appendChild(sn); }
       mods.forEach(function(m){ buildMod(m, list); });
     });
@@ -222,6 +222,7 @@ details.mod summary::-webkit-details-marker{display:none}
   }
   function buildMod(m, list){
       var det=document.createElement('details'); det.className='mod';
+      if((m.part||1)>1) det.open=true; // Part 2 เปิดรายการบทไว้ให้เห็นทันที
       det.innerHTML='<summary><span class="num">'+String(m.id).padStart(2,'0')+'</span><span class="mt">'+m.title+'</span><span class="done" data-mod="'+m.id+'"></span></summary>';
       m.eps.forEach(function(e){
         var b=document.createElement('button'); b.type='button'; b.className='ep'; b.dataset.ep=e.ep;
