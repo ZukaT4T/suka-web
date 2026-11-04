@@ -100,7 +100,8 @@ window.SUKA = {
       { ep: "P2-EP04", title: "เก็บบอดี้", desc: "", duration: 11, video: "" },
       { ep: "P2-EP05", title: "แพทเทิร์นกลับตัว", desc: "", duration: 16, video: "" },
       { ep: "P2-EP06", title: "Fibo", desc: "", duration: 21, video: "" },
-      { ep: "P2-EP07", title: "Setup หาจุดยืนรอ", desc: "", duration: 22, video: "" }
+      { ep: "P2-EP07", title: "Setup หาจุดยืนรอ", desc: "", duration: 22, video: "" },
+      { ep: "P2-EP08", title: "วางแผนเทรดง่ายๆ", desc: "", duration: 37, video: "" }
     ]}
     // ---- เพิ่มบท Part 2 ต่อจากนี้ ----
     // ตัวอย่างเมื่อคลิปพร้อม:
