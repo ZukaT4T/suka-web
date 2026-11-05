@@ -55,8 +55,9 @@ export async function onRequest({ request, env }) {
       return json({ ok: true, partNumber: part.partNumber, etag: part.etag });
     }
     if (mp === "complete") {
-      const parts = await request.json();
-      const obj = await up.complete(parts);
+      let obj;
+      try { const parts = await request.json(); obj = await up.complete(parts); }
+      catch (e) { return bad("complete ไม่สำเร็จ: " + (e && e.message || e), 500); }
       index[ep] = Object.assign({}, index[ep], { [kind]: obj.size, at: Date.now() });
       await env.SUKA_KV.put("media", JSON.stringify(index));
       return json({ ok: true, ep, kind, bytes: obj.size });
