@@ -62,6 +62,7 @@ export async function onRequest({ request, env }) {
       await env.SUKA_KV.put("media", JSON.stringify(index));
       return json({ ok: true, ep, kind, bytes: obj.size });
     }
+    if (mp === "delete") { await env.VIDEOS.delete(key); if (index[ep]) { delete index[ep][kind]; if (!index[ep].video && !index[ep].cover && !index[ep].doc) delete index[ep]; await env.SUKA_KV.put("media", JSON.stringify(index)); } return json({ ok: true, deleted: key }); }
     if (mp === "abort") { await up.abort(); return json({ ok: true }); }
     return bad("mp ไม่ถูกต้อง");
   }
