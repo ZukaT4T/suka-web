@@ -51,7 +51,7 @@ export async function onRequest({ request, env }) {
     if (mp === "part") {
       const n = parseInt(url.searchParams.get("n") || "0", 10);
       if (!(n >= 1 && n <= 10000)) return bad("part number ไม่ถูกต้อง");
-      const part = await up.uploadPart(n, request.body);
+      const part = await up.uploadPart(n, await request.arrayBuffer());
       return json({ ok: true, partNumber: part.partNumber, etag: part.etag });
     }
     if (mp === "complete") {
