@@ -102,7 +102,8 @@ window.SUKA = {
       { ep: "P2-EP06", title: "Fibo", desc: "", duration: 21, video: "" },
       { ep: "P2-EP07", title: "Setup หาจุดยืนรอ", desc: "", duration: 22, video: "" },
       { ep: "P2-EP08", title: "วางแผนเทรดง่ายๆ", desc: "", duration: 37, video: "" },
-      { ep: "P2-EP09", title: "กราฟวิ่งถึงไหน", desc: "", duration: 27, video: "" }
+      { ep: "P2-EP09", title: "กราฟวิ่งถึงไหน", desc: "", duration: 27, video: "" },
+      { ep: "P2-EP10", title: "สรุป 4 ท่าเทรด", desc: "", duration: 47, video: "" }
     ]}
     // ---- เพิ่มบท Part 2 ต่อจากนี้ ----
     // ตัวอย่างเมื่อคลิปพร้อม:
