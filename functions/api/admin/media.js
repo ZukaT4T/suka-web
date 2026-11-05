@@ -38,6 +38,34 @@ export async function onRequest({ request, env }) {
   const ep = url.searchParams.get("ep") || "";
   const kind = url.searchParams.get("kind") || "";
   if (!EP_RE.test(ep) || !KINDS[kind]) return bad("ep/kind ไม่ถูกต้อง");
+  // ไฟล์ใหญ่เกิน 100MB: อัปเป็นชิ้น (R2 multipart) ?mp=create | ?mp=part&uid=..&n=1 | ?mp=complete&uid=.. body=[{partNumber,etag}]
+  const mp = url.searchParams.get("mp");
+  if (mp) {
+    const key = kind + "/" + ep + "." + KINDS[kind].ext;
+    if (mp === "create") {
+      const ctype = url.searchParams.get("type") || KINDS[kind].types[0];
+      const up = await env.VIDEOS.createMultipartUpload(key, { httpMetadata: { contentType: ctype } });
+      return json({ ok: true, uid: up.uploadId, key });
+    }
+    const up = env.VIDEOS.resumeMultipartUpload(key, url.searchParams.get("uid") || "");
+    if (mp === "part") {
+      const n = parseInt(url.searchParams.get("n") || "0", 10);
+      if (!(n >= 1 && n <= 10000)) return bad("part number ไม่ถูกต้อง");
+      const part = await up.uploadPart(n, await request.arrayBuffer());
+      return json({ ok: true, partNumber: part.partNumber, etag: part.etag });
+    }
+    if (mp === "complete") {
+      let obj;
+      try { const parts = await request.json(); obj = await up.complete(parts); }
+      catch (e) { return bad("complete ไม่สำเร็จ: " + (e && e.message || e), 500); }
+      index[ep] = Object.assign({}, index[ep], { [kind]: obj.size, at: Date.now() });
+      await env.SUKA_KV.put("media", JSON.stringify(index));
+      return json({ ok: true, ep, kind, bytes: obj.size });
+    }
+    if (mp === "delete") { await env.VIDEOS.delete(key); if (index[ep]) { delete index[ep][kind]; if (!index[ep].video && !index[ep].cover && !index[ep].doc) delete index[ep]; await env.SUKA_KV.put("media", JSON.stringify(index)); } return json({ ok: true, deleted: key }); }
+    if (mp === "abort") { await up.abort(); return json({ ok: true }); }
+    return bad("mp ไม่ถูกต้อง");
+  }
   const type = (request.headers.get("content-type") || "").split(";")[0].trim();
   if (!KINDS[kind].types.includes(type)) return bad("ชนิดไฟล์ไม่ถูกต้อง: " + type);
   const body = await request.arrayBuffer();
