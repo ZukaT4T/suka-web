@@ -2,7 +2,7 @@
 // รหัส 1 รหัส = นักเรียน 1 คน (ชื่อต้องตรงกับครั้งแรก) เข้าได้ทีละ 1 เครื่อง: ล็อกอินเครื่องใหม่ เครื่องเก่าหลุดอัตโนมัติ
 import { json, bad, normCode, randomToken, readJSON } from "../_lib.js";
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   if (!env.SUKA_KV) return bad("ระบบยังไม่พร้อม (KV)", 500);
   const body = await readJSON(request);
   const name = String(body.name || "").trim().slice(0, 60);
@@ -22,8 +22,9 @@ export async function onRequestPost({ request, env }) {
   const rec = JSON.parse(raw);
   if (rec.revoked) return bad("รหัสนี้ถูกยกเลิกแล้ว ทักแชต LINE @zuka");
 
+  let firstLogin = false;
   if (!rec.usedBy) {
-    rec.usedBy = name; rec.usedAt = Date.now(); rec.devices = 1;
+    rec.usedBy = name; rec.usedAt = Date.now(); rec.devices = 1; firstLogin = true;
   } else {
     const same = rec.usedBy.replace(/\s+/g, "").toLowerCase() === name.replace(/\s+/g, "").toLowerCase();
     if (!same) return bad("รหัสนี้ถูกใช้แล้วโดยชื่ออื่น ถ้าเป็นของคุณ กรอกชื่อให้ตรงกับครั้งแรก หรือทักแชต LINE @zuka");
@@ -37,5 +38,11 @@ export async function onRequestPost({ request, env }) {
 
   await env.SUKA_KV.put("session:" + token, JSON.stringify({ code, name: rec.usedBy, at: Date.now() }));
   await env.SUKA_KV.delete(rlKey);
+  // เข้าเรียนครั้งแรก: บันทึกชื่อที่นักเรียนกรอกลง Google Sheet (คอลัมน์ W–X ของแถวที่รหัสตรงกัน)
+  if (firstLogin && env.SHEET_URL && env.SHEET_SECRET) {
+    const p = fetch(env.SHEET_URL, { method: "POST", headers: { "content-type": "application/json" }, redirect: "follow",
+      body: JSON.stringify({ secret: env.SHEET_SECRET, type: "login", code, name: rec.usedBy, at: rec.usedAt, note: rec.note || "" }) }).catch(() => {});
+    if (waitUntil) waitUntil(p); else await p;
+  }
   return json({ ok: true, token, name: rec.usedBy });
 }
