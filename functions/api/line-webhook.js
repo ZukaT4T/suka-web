@@ -68,15 +68,15 @@ export function groupCode(slipDate, now = Date.now()) {
 function liveCard() {
   const lm = liveMonth();
   return { text: LIVE_TEXT, label: "คอร์สสด 1 เดือน", imgUrl: IMG_BASE + "/assets/live/flex-live-" + lm.imgKey + ".jpg",
-    reply: `คอร์สสด 1 เดือน กับโค้ชสุขา 3,333 บาท 🎯\n\n• สอนสดทาง Google Meet\n• วันที่เรียน ${lm.range}\n• ดูแลและฝึกไปด้วยกัน 1 เดือน\n• ฝึกวิเคราะห์ วางแผน และทำตามแผน จนการเทรดมีระบบ ไม่ใช่เข้าตามอารมณ์\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n` + PAY_SITE + "/?buy=live#live\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะส่งลิงก์ Google Meet และรายละเอียดการเรียนให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" };
+    reply: `คอร์สสด 1 เดือน กับโค้ชสุขา 3,333 บาท 🎯\n\n• สอนสดทาง Google Meet\n• วันที่เรียน ${lm.range}\n• ดูแลและฝึกไปด้วยกัน 1 เดือน\n• ฝึกวิเคราะห์ วางแผน และทำตามแผน จนการเทรดมีระบบ ไม่ใช่เข้าตามอารมณ์\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n` + PAY_SITE + "/?p=2&buy=live#live\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะส่งลิงก์ Google Meet และรายละเอียดการเรียนให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" };
 }
 const PICK = {
   online: { text: "สนใจคอร์สออนไลน์ 1,490 บาท ค่ะ", img: "flex-online.jpg", label: "คอร์สออนไลน์",
-    reply: "คอร์สออนไลน์ GOLD TRADING FOUNDATION 1,490 บาท 🎯\n\nสมัครและดูวิธีชำระเงินได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?buy=online#pay\n\nโอนแล้วส่งรูปสลิปในแชตนี้ได้เลย ระบบจะส่งรหัส VIP + ลิงก์ห้องเรียนให้ทันทีค่ะ 🙏" },
+    reply: "คอร์สออนไลน์ GOLD TRADING FOUNDATION 1,490 บาท 🎯\n\nสมัครและดูวิธีชำระเงินได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?p=2&buy=online#pay\n\nโอนแล้วส่งรูปสลิปในแชตนี้ได้เลย ระบบจะส่งรหัส VIP + ลิงก์ห้องเรียนให้ทันทีค่ะ 🙏" },
   pv2: { text: "สนใจ Private Coaching 2 เดือน (19,999 บาท) ค่ะ", img: "flex-pv2.jpg", label: "Private 2 เดือน",
-    reply: "Private Coaching 1:1 · 2 เดือน 19,999 บาท\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?buy=pv2#private\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะนัดวันเริ่มเรียนกับโค้ชสุขาให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" },
+    reply: "Private Coaching 1:1 · 2 เดือน 19,999 บาท\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?p=2&buy=pv2#private\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะนัดวันเริ่มเรียนกับโค้ชสุขาให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" },
   pv6: { text: "สนใจ Private Coaching 6 เดือน (39,999 บาท) ค่ะ", img: "flex-pv6.jpg", label: "Private 6 เดือน",
-    reply: "Private Coaching 1:1 · 6 เดือน 39,999 บาท (BEST VALUE)\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?buy=pv6#private\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะนัดวันเริ่มเรียนกับโค้ชสุขาให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" },
+    reply: "Private Coaching 1:1 · 6 เดือน 39,999 บาท (BEST VALUE)\n\nดูรายละเอียดและสมัครได้ที่นี่ค่ะ 👉\n" + PAY_SITE + "/?p=2&buy=pv6#private\n\nโอนแล้วส่งรูปสลิปในแชตนี้ แอดมินจะนัดวันเริ่มเรียนกับโค้ชสุขาให้ค่ะ มีคำถามพิมพ์ถามได้เลยนะคะ 🙏" },
 };
 const norm = (x) => String(x || "").replace(/\s+/g, "").toLowerCase();
 const PICK_BY_TEXT = Object.fromEntries(Object.values(PICK).map((p) => [norm(p.text), p]));
@@ -107,7 +107,7 @@ async function replyMessages(replyToken, env, messages) {
 }
 
 async function sendCourseCards(ev, env) {
-  await replyMessages(ev.replyToken, env, [courseFlex(), { type: "text", text: "👉 ดูรายละเอียดคอร์สทั้งหมดที่เว็บไซต์ได้เลยค่ะ\n" + SITE }]);
+  await replyMessages(ev.replyToken, env, [courseFlex(), { type: "text", text: "👉 ดูรายละเอียดคอร์สทั้งหมดที่เว็บไซต์ได้เลยค่ะ\n" + SITE + "/?p=2" }]);
 }
 
 // ข้อความทักทายเพื่อนใหม่ (ส่งโดยบอท เพื่อใช้การ์ดรูปเต็มได้)
@@ -133,7 +133,7 @@ const GREET_HOW = `สมัครง่ายๆ 3 ขั้นตอนค่�
 3️⃣ คอร์สออนไลน์: ระบบส่ง "รหัส VIP" + ลิงก์ห้องเรียน + ลิงก์กลุ่ม OpenChat ให้ทันที ✨
    Private: แอดมินนัดวันเริ่มเรียนกับโค้ชสุขาในแชตนี้
 
-ดูรายละเอียดทั้งหมด 👉 ${SITE}`;
+ดูรายละเอียดทั้งหมด 👉 ${SITE}/?p=2`;
 
 async function sendGreeting(ev, env) {
   const name = await displayName(ev.source?.userId || "", env);
