@@ -16,7 +16,7 @@ window.SUKA = {
   lineOA: "https://lin.ee/qyLgapx",
   lineOAHandle: "@zuka",
   facebook: "https://www.facebook.com/zukatrader/",
-  openchat: "https://line.me/ti/g2/thhJkmSQitUosAotVZhCeL2UwBkaMpftkAN8Ww", // กลุ่ม LINE ถาม-ตอบของคอร์ส
+  openchat: "https://line.me/ti/g2/kBuvaK3DkYBc7DV2uh6_EhaHODiCe57RF7mKxQ", // กลุ่ม LINE ถาม-ตอบของคอร์ส
 
   parts: [
     { id: 1, title: "Part 1", sub: "พื้นฐานระบบสำหรับมือใหม่สู่มืออาชีพ" },

@@ -17,7 +17,7 @@ const PACKAGES = {
 // บัญชีรับเงิน: กสิกรไทย (004) ปุญภัช ภูธาราพงษ์ 746-2-43028-5
 const RECEIVER = { bankId: "004", nameTh: "ปุญภัช", nameEn: "PUNYAPHAT", acctDigits: "3028" };
 const LEARN_URL = "https://www.zuka-t4tacademy.com/learn/";
-const OPENCHAT_URL = "https://line.me/ti/g2/thhJkmSQitUosAotVZhCeL2UwBkaMpftkAN8Ww?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
+const OPENCHAT_URL = "https://line.me/ti/g2/kBuvaK3DkYBc7DV2uh6_EhaHODiCe57RF7mKxQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -238,8 +238,7 @@ async function handleEvent(ev, env) {
       `เข้าเรียนที่ ${LEARN_URL}\n` +
       `กรอกชื่อ + รหัส VIP ครั้งเดียว ครั้งต่อไปเข้าได้เลยค่ะ\n\n` +
       `* รหัสนี้ใช้ได้ 1 คน กรุณาอย่าแชร์นะคะ\n\n` +
-      `คุณได้รับคำเชิญให้เข้าร่วม "โค้ชสุขา : พูดคุยระบบเทรดทองคำ" พูดคุยสอบถามกับโค้ชโดยตรง และเพื่อนๆ เทรดเดอร์ทุกคน (ดูแลตลอดการใช้งาน)\n` +
-      `แตะลิงก์เพื่อเข้าร่วมโอเพนแชท:\n${OPENCHAT_URL}`,
+      `คุณได้รับคำเชิญให้เข้าร่วม "คอร์สออนไลน์ โค้ชสุขา🥇" โปรดแตะลิงก์ด้านล่างเพื่อเข้าร่วมโอเพนแชทนี้\n${OPENCHAT_URL}`,
       code);
   }
 
