@@ -57,7 +57,7 @@ export function liveMonth(now = Date.now()) {
 }
 const LIVE_TEXT = "สนใจคอร์สสด 1 เดือน (3,333 บาท) ค่ะ";
 // กลุ่ม OpenChat ของคอร์สสด (โค้ชสุขา รอบพิเศษ) — ตั้งรหัสเข้ากลุ่มตามวันที่โอน
-const LIVE_OPENCHAT_URL = "https://line.me/ti/g2/1-o8fbc0cZLD3ftMyTvFs51Zzpm8-xXGHBu3yQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
+const LIVE_OPENCHAT_URL = "https://line.me/ti/g2/K5l9lK0Xm-cX0tjDwf1BcSRyeKu0EVIU-Zdh-w?utm_source=invitation&utm_medium=link_copy&utm_campaign=default";
 // วันที่โอนในสลิป (เวลาไทย) -> "ววดด" เช่น 2 พ.ย. = "0211", 10 พ.ย. = "1011"
 export function groupCode(slipDate, now = Date.now()) {
   let t = Date.parse(slipDate || "");
@@ -249,7 +249,7 @@ async function handleEvent(ev, env) {
     await logSlip(env, { at: Date.now(), userId, name, result: "live_paid", amount, transRef, code: "กลุ่ม " + gcode, pkg: `${pk.name} (${lm.range} ${lm.beYear})` }, d);
     return reply(ev.replyToken, env,
       `ได้รับสลิปยอด 3,333 บาท ตรวจสอบเรียบร้อยแล้วค่ะ ขอบคุณที่สมัครคอร์สสด 1 เดือน (รอบ ${lm.range}) นะคะ 🙏\n\n` +
-      `คุณได้รับคำเชิญให้เข้าร่วม "โค้ชสุขา รอบพิเศษ 🇺🇸" โปรดแตะลิงก์ด้านล่างเพื่อเข้าร่วมโอเพนแชทนี้\n${LIVE_OPENCHAT_URL}\n\n` +
+      `คุณได้รับคำเชิญให้เข้าร่วม "คอร์สสด ธ.ค. โค้ชสุขา🇺🇸" โปรดแตะลิงก์ด้านล่างเพื่อเข้าร่วมโอเพนแชทนี้\n${LIVE_OPENCHAT_URL}\n\n` +
       `🔑 รหัสเข้ากลุ่ม: ${gcode}\n\n` +
       `หลังจากกดเข้ากลุ่มแล้ว รบกวนแจ้ง ชื่อเล่น (จังหวัด) และอีเมลที่ใช้เข้า Google Meet ด้วยนะคะ`,
       gcode);
